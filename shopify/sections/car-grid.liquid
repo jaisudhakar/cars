@@ -1,0 +1,89 @@
+{%- comment -%}
+  Car grid — cars from a collection as cards. Hovering a paint dot repaints the car and the price
+  follows; Reserve adds the car in that paint to the cart. Filter tabs come from product types.
+  Body style, tagline, specs and paint colours come from product metafields (see README).
+{%- endcomment -%}
+{% render 'car-assets' %}
+{{ 'sections.css' | asset_url | stylesheet_tag }}
+{{ 'car-sections.css' | asset_url | stylesheet_tag }}
+<script src="{{ 'car-card.js' | asset_url }}" defer></script>
+<script src="{{ 'sections.js' | asset_url }}" defer></script>
+
+{%- liquid
+  assign s = section.settings
+  assign col = s.collection
+  if col == blank
+    assign col = collections.all
+  endif
+  assign types = ''
+  for p in col.products limit: s.limit
+    if p.type != blank
+      assign key = '|' | append: p.type | append: '|'
+      unless types contains key
+        assign types = types | append: p.type | append: '|'
+      endunless
+    endif
+  endfor
+  assign type_list = types | split: '|'
+-%}
+<section class="sx section" data-pg data-limit="{{ s.limit }}" data-currency="{{ cart.currency.iso_code }}" style="--accent: {{ s.accent }};" {{ section.shopify_attributes }}>
+  <div class="container">
+    <div class="section-head">
+      <div>
+        {%- if s.eyebrow != blank -%}<p class="eyebrow" data-reveal>{{ s.eyebrow | escape }}</p>{%- endif -%}
+        <h2 class="h2" data-split style="margin-top:16px">{% render 'car-accent', text: s.heading %}</h2>
+      </div>
+      {%- if s.show_tabs and type_list.size > 1 -%}
+        <div class="tabs" role="group" aria-label="Filter cars" data-reveal>
+          <span class="tab-ink" aria-hidden="true"></span>
+          <button type="button" class="tab" data-filter="all" aria-pressed="true">{{ s.all_label | escape }}</button>
+          {%- for t in type_list -%}
+            {%- if t == blank -%}{%- continue -%}{%- endif -%}
+            <button type="button" class="tab" data-filter="{{ t | handleize }}" aria-pressed="false">{{ t | escape }}</button>
+          {%- endfor -%}
+        </div>
+      {%- endif -%}
+    </div>
+    <div class="cc-grid" data-pg-grid></div>
+    {%- if s.button_label != blank -%}
+      <div style="text-align:center;margin-top:48px" data-reveal><a class="btn btn-dark" href="{{ col.url }}" data-magnetic>{{ s.button_label | escape }}</a></div>
+    {%- endif -%}
+  </div>
+  <script type="application/json" data-pg-json>
+    [
+      {%- for p in col.products limit: s.limit -%}
+        {%- capture car -%}{%- render 'car-json', product: p, fallback_style: s.default_style -%}{%- endcapture -%}
+        {%- comment -%} add the category used by the tabs {%- endcomment -%}
+        {{ car | strip | remove_last: '}' }}, "category": {{ p.type | handleize | json }}, "tone": {{ s.card_tone | json }}, "year": {{ p.metafields.custom.model_year.value | default: '' | json }}, "fuel": {{ p.metafields.custom.fuel.value | default: '' | json }} }
+        {%- unless forloop.last -%},{%- endunless -%}
+      {%- endfor -%}
+    ]
+  </script>
+</section>
+
+{% schema %}
+{
+  "name": "Car grid",
+  "tag": "div",
+  "class": "section-car-grid",
+  "settings": [
+    { "type": "text", "id": "eyebrow", "label": "Small label", "default": "In the showroom now" },
+    { "type": "text", "id": "heading", "label": "Heading", "default": "Latest *arrivals*", "info": "Wrap a word in *stars* for the italic accent." },
+    { "type": "collection", "id": "collection", "label": "Collection" },
+    { "type": "range", "id": "limit", "label": "Cars to show", "min": 2, "max": 24, "step": 1, "default": 6 },
+    { "type": "checkbox", "id": "show_tabs", "label": "Filter tabs (by product type)", "default": true },
+    { "type": "text", "id": "all_label", "label": "First tab", "default": "All" },
+    { "type": "text", "id": "button_label", "label": "Button under the grid", "default": "See all inventory" },
+    {
+      "type": "select", "id": "default_style", "label": "Drawing when a product has no body style", "default": "sedan",
+      "options": [
+        { "value": "sedan", "label": "Sedan" }, { "value": "ev", "label": "Electric sedan" }, { "value": "coupe", "label": "Sports coupe" },
+        { "value": "suv", "label": "SUV" }, { "value": "hatch", "label": "Hatchback / wagon" }, { "value": "pickup", "label": "Pickup truck" }
+      ]
+    },
+    { "type": "color", "id": "card_tone", "label": "Card background", "default": "#eef0f2" },
+    { "type": "color", "id": "accent", "label": "Accent", "default": "#ff4d1a" }
+  ],
+  "presets": [ { "name": "Car grid" } ]
+}
+{% endschema %}

@@ -1,0 +1,40 @@
+{%- comment -%} Marquee — two rows of words scrolling in opposite directions. {%- endcomment -%}
+{% render 'car-assets' %}
+{{ 'sections.css' | asset_url | stylesheet_tag }}
+{{ 'car-sections.css' | asset_url | stylesheet_tag }}
+{%- liquid
+  assign s = section.settings
+  capture star
+    echo '<svg class="mq-star" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 0l2.6 9.4L24 12l-9.4 2.6L12 24l-2.6-9.4L0 12l9.4-2.6z"/></svg>'
+  endcapture
+-%}
+<section class="sx mq" aria-label="Highlights" style="--mq-bg: {{ s.background }}; --mq-txt: {{ s.text_color }}; --mq-speed: {{ s.speed }}s; --accent: {{ s.accent }};" {{ section.shopify_attributes }}>
+  {%- capture words -%}{%- for block in section.blocks -%}<span class="mq-item" {{ block.shopify_attributes }}>{{ block.settings.word | escape }}{{ star }}</span>{%- endfor -%}{%- endcapture -%}
+  {%- capture words_rev -%}{%- for block in section.blocks reversed -%}<span class="mq-item">{{ block.settings.word | escape }}{{ star }}</span>{%- endfor -%}{%- endcapture -%}
+  <div class="mq-row"><div class="mq-set">{{ words }}{{ words }}</div><div class="mq-set" aria-hidden="true">{{ words }}{{ words }}</div></div>
+  {%- if s.second_row -%}
+    <div class="mq-row rev outline" aria-hidden="true"><div class="mq-set">{{ words_rev }}{{ words_rev }}</div><div class="mq-set">{{ words_rev }}{{ words_rev }}</div></div>
+  {%- endif -%}
+</section>
+
+{% schema %}
+{
+  "name": "Car marquee",
+  "tag": "div",
+  "class": "section-car-marquee",
+  "settings": [
+    { "type": "range", "id": "speed", "label": "Speed (seconds per loop)", "min": 10, "max": 80, "step": 2, "default": 32 },
+    { "type": "checkbox", "id": "second_row", "label": "Second outlined row", "default": true },
+    { "type": "color", "id": "background", "label": "Background", "default": "#0d0f12" },
+    { "type": "color", "id": "text_color", "label": "Text", "default": "#ffffff" },
+    { "type": "color", "id": "accent", "label": "Stars", "default": "#ff4d1a" }
+  ],
+  "blocks": [ { "type": "word", "name": "Word", "settings": [ { "type": "text", "id": "word", "label": "Word", "default": "Electric" } ] } ],
+  "max_blocks": 10,
+  "presets": [ { "name": "Car marquee", "blocks": [
+    { "type": "word", "settings": { "word": "Electric" } }, { "type": "word", "settings": { "word": "Performance" } },
+    { "type": "word", "settings": { "word": "Test drive today" } }, { "type": "word", "settings": { "word": "0% APR finance" } },
+    { "type": "word", "settings": { "word": "Built to move" } }
+  ] } ]
+}
+{% endschema %}

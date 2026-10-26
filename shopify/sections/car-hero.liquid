@@ -1,0 +1,115 @@
+{%- comment -%}
+  Car hero — the car drives in when the page opens, idles with its headlights on and drives
+  off as you scroll. Paint blocks become colour dots that repaint it.
+{%- endcomment -%}
+{% render 'car-assets' %}
+{{ 'car-hero.css' | asset_url | stylesheet_tag }}
+<script src="{{ 'car-hero.js' | asset_url }}" defer></script>
+
+{%- liquid
+  assign s = section.settings
+  assign first_hex = '#1f55d6'
+  assign first_name = ''
+  for block in section.blocks
+    if block.type == 'paint'
+      assign first_hex = block.settings.color
+      assign first_name = block.settings.name
+      break
+    endif
+  endfor
+-%}
+<section class="sx ch" data-car-hero aria-label="Introduction" style="--hero-paint:{{ first_hex }};--accent:{{ s.accent }};" {{ section.shopify_attributes }}>
+  {%- if s.word != blank -%}<div class="ch-word" aria-hidden="true">{{ s.word | escape }}</div>{%- endif -%}
+  <div class="ch-in">
+    <div class="ch-copy">
+      {%- if s.eyebrow != blank -%}<p class="eyebrow" data-reveal>{{ s.eyebrow | escape }}</p>{%- endif -%}
+      <h1 class="display ch-title" data-split>{% render 'car-accent', text: s.heading %}</h1>
+      {%- if s.text != blank -%}<p class="lead" data-reveal style="--rd:.45s">{{ s.text | escape }}</p>{%- endif -%}
+      <div class="ch-ctas" data-reveal style="--rd:.6s">
+        {%- if s.button_label != blank -%}
+          <a class="btn btn-light" href="{{ s.button_link | default: routes.all_products_collection_url }}" data-magnetic>{{ s.button_label | escape }} <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a>
+        {%- endif -%}
+        {%- if s.link_label != blank -%}
+          <a class="link-arrow" href="{{ s.link_url | default: '#' }}">{{ s.link_label | escape }} <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a>
+        {%- endif -%}
+      </div>
+    </div>
+  </div>
+  <div class="ch-road" aria-hidden="true">
+    <div class="ch-streaks"><i></i><i></i><i></i><i></i></div>
+    <div class="ch-floor"></div>
+    <div class="ch-reflect"></div>
+    <div class="ch-car" data-hero-car data-style="{{ s.style }}" data-paint="{{ first_hex }}"{% if s.image != blank %} data-image="{{ s.image | image_url: width: 2000 }}"{% endif %}></div>
+  </div>
+  <div class="ch-bar">
+    <div class="ch-paints" data-hero-paints role="group" aria-label="Paint the car">
+      {%- for block in section.blocks -%}
+        {%- if block.type == 'paint' -%}
+          <button type="button" data-hex="{{ block.settings.color }}" style="--c:{{ block.settings.color }}" aria-label="{{ block.settings.name | escape }}" aria-pressed="{% if forloop.first %}true{% else %}false{% endif %}" {{ block.shopify_attributes }}></button>
+        {%- endif -%}
+      {%- endfor -%}
+      <span data-hero-paint-name>{{ first_name | escape }}</span>
+    </div>
+    <dl class="ch-specs">
+      {%- for block in section.blocks -%}
+        {%- if block.type == 'spec' -%}
+          <div {{ block.shopify_attributes }}><dt>{{ block.settings.label | escape }}</dt><dd>{{ block.settings.value | escape }}</dd></div>
+        {%- endif -%}
+      {%- endfor -%}
+    </dl>
+  </div>
+  {%- if s.scroll_label != blank -%}<a class="ch-scroll" href="#MainContent"><i></i><span>{{ s.scroll_label | escape }}</span></a>{%- endif -%}
+</section>
+
+{% schema %}
+{
+  "name": "Car hero",
+  "tag": "div",
+  "class": "section-car-hero",
+  "settings": [
+    { "type": "text", "id": "eyebrow", "label": "Small label", "default": "2026 line-up · Electric & performance" },
+    { "type": "text", "id": "heading", "label": "Heading", "default": "Drive the *future.*", "info": "Wrap a word in *stars* for the italic accent." },
+    { "type": "textarea", "id": "text", "label": "Text", "default": "Seven new models, one road. Scroll down to take each one for a spin, pick a paint and see the price change as you go." },
+    { "type": "text", "id": "button_label", "label": "Button", "default": "Explore inventory" },
+    { "type": "url", "id": "button_link", "label": "Button link" },
+    { "type": "text", "id": "link_label", "label": "Second link", "default": "Book a test drive" },
+    { "type": "url", "id": "link_url", "label": "Second link URL" },
+    { "type": "text", "id": "word", "label": "Big outline word behind the car", "default": "VOLT S" },
+    { "type": "text", "id": "scroll_label", "label": "Scroll cue", "default": "Scroll to drive" },
+    {
+      "type": "select", "id": "style", "label": "Car (built-in drawing)", "default": "ev",
+      "options": [
+        { "value": "sedan", "label": "Sedan" }, { "value": "ev", "label": "Electric sedan" }, { "value": "coupe", "label": "Sports coupe" },
+        { "value": "suv", "label": "SUV" }, { "value": "hatch", "label": "Hatchback / wagon" }, { "value": "pickup", "label": "Pickup truck" }
+      ]
+    },
+    { "type": "image_picker", "id": "image", "label": "Photo instead of the drawing", "info": "Transparent PNG/WebP facing right. Paint dots only recolour the drawing." },
+    { "type": "color", "id": "accent", "label": "Button hover", "default": "#ff4d1a" }
+  ],
+  "blocks": [
+    { "type": "paint", "name": "Paint dot", "settings": [
+      { "type": "text", "id": "name", "label": "Name", "default": "Electric Blue" },
+      { "type": "color", "id": "color", "label": "Colour", "default": "#1f55d6" }
+    ] },
+    { "type": "spec", "name": "Spec", "limit": 4, "settings": [
+      { "type": "text", "id": "label", "label": "Label", "default": "0–100 km/h" },
+      { "type": "text", "id": "value", "label": "Value", "default": "2.4 s" }
+    ] }
+  ],
+  "presets": [
+    {
+      "name": "Car hero",
+      "blocks": [
+        { "type": "paint", "settings": { "name": "Electric Blue", "color": "#1f55d6" } },
+        { "type": "paint", "settings": { "name": "Rosso Corsa", "color": "#c3161f" } },
+        { "type": "paint", "settings": { "name": "Ultra Violet", "color": "#6b2fb3" } },
+        { "type": "paint", "settings": { "name": "Volt Lime", "color": "#b6dc1f" } },
+        { "type": "paint", "settings": { "name": "Glacier White", "color": "#eceff2" } },
+        { "type": "spec", "settings": { "label": "0–100 km/h", "value": "2.4 s" } },
+        { "type": "spec", "settings": { "label": "Power", "value": "760 hp" } },
+        { "type": "spec", "settings": { "label": "Range", "value": "540 km" } }
+      ]
+    }
+  ]
+}
+{% endschema %}

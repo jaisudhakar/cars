@@ -1,0 +1,65 @@
+{%- comment -%}
+  Test-drive request — posts to Shopify's contact form, so requests arrive in the store's
+  contact email. A car drives along the road under the card.
+{%- endcomment -%}
+{% render 'car-assets' %}
+{{ 'car-sections.css' | asset_url | stylesheet_tag }}
+<script src="{{ 'car-sections.js' | asset_url }}" defer></script>
+{%- liquid
+  assign s = section.settings
+  assign td_id = 'td-form-' | append: section.id
+-%}
+<section id="test-drive-{{ section.id }}" class="sx td" style="--night: {{ s.background }};" {{ section.shopify_attributes }}>
+  <div class="container">
+    <div class="td-card" data-reveal="up">
+      {%- if s.eyebrow != blank -%}<p class="eyebrow">{{ s.eyebrow | escape }}</p>{%- endif -%}
+      <h2 class="h2">{% render 'car-accent', text: s.heading %}</h2>
+      {%- if s.text != blank -%}<p>{{ s.text | escape }}</p>{%- endif -%}
+      {%- form 'contact', class: 'td-form', id: td_id, data-td-form: 'true', data-td-native: 'true' -%}
+        <input type="hidden" name="contact[subject]" value="Test drive request">
+        <label class="visually-hidden" for="td-name-{{ section.id }}">Name</label>
+        <input id="td-name-{{ section.id }}" name="contact[name]" type="text" placeholder="Your name" autocomplete="name" required>
+        <label class="visually-hidden" for="td-email-{{ section.id }}">Email</label>
+        <input id="td-email-{{ section.id }}" name="contact[email]" type="email" placeholder="Email" autocomplete="email" required>
+        <label class="visually-hidden" for="td-model-{{ section.id }}">Model</label>
+        <select id="td-model-{{ section.id }}" name="contact[model]" required>
+          <option value="">Choose a model</option>
+          {%- assign col = s.collection | default: collections.all -%}
+          {%- for p in col.products limit: 30 -%}<option>{{ p.title | escape }}</option>{%- endfor -%}
+        </select>
+        <button type="submit" class="btn btn-dark">{{ s.button_label | escape }}</button>
+        <p class="td-msg{% if form.posted_successfully? %} is-ok{% endif %}" aria-live="polite">
+          {%- if form.posted_successfully? -%}{{ s.success | escape }}{%- elsif form.errors -%}{{ form.errors | default_errors }}{%- endif -%}
+        </p>
+      {%- endform -%}
+    </div>
+  </div>
+  <div class="td-road" aria-hidden="true"></div>
+  <div class="td-car" data-car-art="{{ s.style }}" data-paint="{{ s.paint }}" aria-hidden="true"></div>
+</section>
+
+{% schema %}
+{
+  "name": "Car test drive",
+  "tag": "div",
+  "class": "section-car-test-drive",
+  "settings": [
+    { "type": "text", "id": "eyebrow", "label": "Small label", "default": "Test drive" },
+    { "type": "text", "id": "heading", "label": "Heading", "default": "Feel it from the *driver's seat.*" },
+    { "type": "textarea", "id": "text", "label": "Text", "default": "Pick a car and leave your email. We'll bring it to your door or have it warmed up at the showroom." },
+    { "type": "collection", "id": "collection", "label": "Models list from collection" },
+    { "type": "text", "id": "button_label", "label": "Button", "default": "Book" },
+    { "type": "text", "id": "success", "label": "Thank-you message", "default": "Thanks — we'll call you to confirm a time." },
+    {
+      "type": "select", "id": "style", "label": "Car on the road", "default": "coupe",
+      "options": [
+        { "value": "sedan", "label": "Sedan" }, { "value": "ev", "label": "Electric sedan" }, { "value": "coupe", "label": "Sports coupe" },
+        { "value": "suv", "label": "SUV" }, { "value": "hatch", "label": "Hatchback / wagon" }, { "value": "pickup", "label": "Pickup truck" }
+      ]
+    },
+    { "type": "color", "id": "paint", "label": "Car paint", "default": "#ff4d1a" },
+    { "type": "color", "id": "background", "label": "Background", "default": "#0a0c10" }
+  ],
+  "presets": [ { "name": "Car test drive" } ]
+}
+{% endschema %}

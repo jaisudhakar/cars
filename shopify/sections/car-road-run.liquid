@@ -1,0 +1,163 @@
+{%- comment -%}
+  Road Run — a pinned, scroll-driven road. Each car drives in, parks with its price and paint
+  colours (the price updates per paint), then drives off as the next one arrives. Day turns to
+  night along the way. One block per car.
+{%- endcomment -%}
+{% render 'car-assets' %}
+{{ 'road-run.css' | asset_url | stylesheet_tag }}
+<script src="{{ 'road-run.js' | asset_url }}" defer></script>
+
+{%- liquid
+  assign s = section.settings
+  assign count = 0
+  for block in section.blocks
+    if block.settings.product != blank
+      assign count = count | plus: 1
+    endif
+  endfor
+  assign count_label = count | prepend: '0' | slice: -2, 2
+  if s.mountains != blank
+    assign img_mtn = s.mountains | image_url: width: 2400
+  else
+    assign img_mtn = 'road-mountains.svg' | asset_url
+  endif
+  if s.city != blank
+    assign img_city = s.city | image_url: width: 2400
+  else
+    assign img_city = 'road-city.svg' | asset_url
+  endif
+-%}
+<section
+  id="road-run-{{ section.id }}"
+  class="sx rr"
+  data-rr
+  data-rr-snap="{{ s.snap }}"
+  data-currency="{{ cart.currency.iso_code }}"
+  aria-label="{{ s.label | escape }}"
+  style="--accent: {{ s.accent }};"
+  {{ section.shopify_attributes }}
+>
+  <div class="rr-sticky">
+    <div class="rr-stars" aria-hidden="true"></div>
+    <div class="rr-sun" aria-hidden="true"></div>
+    <div class="rr-moon" aria-hidden="true"></div>
+    {%- if s.show_ghost -%}<div class="rr-ghost" data-rr-ghost aria-hidden="true"></div>{%- endif -%}
+    <div class="rr-layer rr-mtn" style="background-image:url({{ img_mtn }})" data-rr-layer="0.06" data-aspect="{% if s.mountains != blank %}{{ s.mountains.aspect_ratio }}{% else %}5.333{% endif %}" aria-hidden="true"></div>
+    <div class="rr-layer rr-city" style="background-image:url({{ img_city }})" data-rr-layer="0.16" data-aspect="{% if s.city != blank %}{{ s.city.aspect_ratio }}{% else %}4.615{% endif %}" aria-hidden="true"></div>
+    <div class="rr-tint" aria-hidden="true"></div>
+    {%- if s.city == blank -%}
+      <div class="rr-layer rr-city-lights" style="background-image:url({{ 'road-city-lights.svg' | asset_url }})" data-rr-layer="0.16" data-aspect="4.615" aria-hidden="true"></div>
+    {%- endif -%}
+    <div class="rr-layer rr-lamps" style="background-image:url({{ 'road-lamps.svg' | asset_url }})" data-rr-layer="0.5" data-aspect="2.1875" aria-hidden="true"></div>
+    <div class="rr-shade" aria-hidden="true"></div>
+    <div class="rr-layer rr-lamps-glow" style="background-image:url({{ 'road-lamps-glow.svg' | asset_url }})" data-rr-layer="0.5" data-aspect="2.1875" aria-hidden="true"></div>
+    <div class="rr-road" aria-hidden="true">
+      <div class="rr-road-sheen"></div>
+      <div class="rr-lane" data-rr-lane></div>
+      <div class="rr-edge"></div>
+    </div>
+    <div class="rr-scrim" aria-hidden="true"></div>
+    <div class="rr-cars" data-rr-cars></div>
+
+    <div class="rr-info" aria-live="polite">
+      <div class="rr-idx"><span data-rr-idx>01</span> / <span data-rr-max>{{ count_label }}</span>{% if s.kicker != blank %} — {{ s.kicker | escape }}{% endif %}</div>
+      <p class="rr-cat" data-rr-cat></p>
+      <h2 class="rr-name" data-rr-name></h2>
+      <p class="rr-tag" data-rr-tag></p>
+      <div class="rr-price"><small>{{ s.price_label | escape }}</small><strong data-rr-price></strong><span class="rr-paint-name" data-rr-paint></span></div>
+      <div class="rr-paints" data-rr-paints role="radiogroup" aria-label="Choose a paint"></div>
+    </div>
+
+    {%- if s.show_steps -%}<ol class="rr-steps" data-rr-steps aria-label="Models on the road"></ol>{%- endif -%}
+
+    <div class="rr-dash">
+      {%- if s.show_speedo -%}
+        <div class="rr-hud" aria-hidden="true">
+          <div class="rr-gauge">
+            <svg viewBox="0 0 120 120">
+              <path d="M24.6 95.4 A50 50 0 1 1 95.4 95.4" fill="none" stroke="rgba(255,255,255,.18)" stroke-width="6" stroke-linecap="round"/>
+              <path d="M24.6 95.4 A50 50 0 1 1 95.4 95.4" fill="none" stroke="#fff" stroke-width="1.5" stroke-dasharray="1.5 8.2"/>
+            </svg>
+            <span class="rr-needle" data-rr-needle></span>
+            <span class="rr-gauge-num"><span data-rr-speed>0</span><small>{{ s.speed_unit | escape }}</small></span>
+          </div>
+          <div class="rr-odo">Odometer<b data-rr-odo>000000</b></div>
+        </div>
+      {%- endif -%}
+      <dl class="rr-specs" data-rr-specs></dl>
+      <div class="rr-ctas">
+        <p class="rr-msg" data-rr-msg aria-live="polite"></p>
+        <button type="button" class="btn btn-light" data-rr-reserve>{{ s.reserve_label | escape }}</button>
+        <a class="link-arrow" href="#" data-rr-link>{{ s.details_label | escape }} <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a>
+      </div>
+    </div>
+    <div class="rr-hint" aria-hidden="true"><i></i>{{ s.hint | escape }}</div>
+    <div class="rr-bar" aria-hidden="true"><i></i></div>
+  </div>
+
+  <script type="application/json" data-rr-json>
+    [
+      {%- assign first = true -%}
+      {%- for block in section.blocks -%}
+        {%- assign p = block.settings.product -%}
+        {%- if p == blank -%}{%- continue -%}{%- endif -%}
+        {%- unless first -%},{%- endunless -%}
+        {%- assign first = false -%}
+        {%- render 'car-json', product: p, style: block.settings.style, tagline: block.settings.tagline, paints: block.settings.paints, image: block.settings.image, power: block.settings.power, accel: block.settings.accel, range: block.settings.range, top: block.settings.top -%}
+      {%- endfor -%}
+    ]
+  </script>
+</section>
+
+{% schema %}
+{
+  "name": "Car road run",
+  "tag": "div",
+  "class": "section-car-road-run",
+  "settings": [
+    { "type": "text", "id": "label", "label": "Section name (screen readers)", "default": "Road Run — scroll to drive through the line-up" },
+    { "type": "text", "id": "kicker", "label": "Small label after the counter", "default": "Road Run" },
+    { "type": "text", "id": "price_label", "label": "Price label", "default": "Price in this paint" },
+    { "type": "text", "id": "reserve_label", "label": "Reserve button", "default": "Reserve this car" },
+    { "type": "text", "id": "details_label", "label": "Details link", "default": "Explore" },
+    { "type": "text", "id": "hint", "label": "Scroll hint", "default": "Scroll to drive" },
+    { "type": "color", "id": "accent", "label": "Accent", "default": "#ff4d1a" },
+    { "type": "checkbox", "id": "show_speedo", "label": "Show speedometer", "default": true },
+    { "type": "text", "id": "speed_unit", "label": "Speed unit", "default": "KM/H" },
+    { "type": "checkbox", "id": "show_steps", "label": "Show model list", "default": true },
+    { "type": "checkbox", "id": "show_ghost", "label": "Show big model name behind the car", "default": true },
+    { "type": "checkbox", "id": "snap", "label": "Roll on to the nearest car when scrolling stops", "default": true },
+    { "type": "header", "content": "Scenery (optional)" },
+    { "type": "paragraph", "content": "Wide images with transparent backgrounds that tile sideways. Leave empty for the built-in mountains and city." },
+    { "type": "image_picker", "id": "mountains", "label": "Far layer (mountains)" },
+    { "type": "image_picker", "id": "city", "label": "Middle layer (city)" }
+  ],
+  "blocks": [
+    {
+      "type": "car",
+      "name": "Car",
+      "settings": [
+        { "type": "product", "id": "product", "label": "Product", "info": "Paints come from the option named Color, Colour or Paint. Each paint's price is that variant's price." },
+        {
+          "type": "select", "id": "style", "label": "Body (built-in drawing)", "default": "sedan",
+          "options": [
+            { "value": "sedan", "label": "Sedan" }, { "value": "ev", "label": "Electric sedan" }, { "value": "coupe", "label": "Sports coupe" },
+            { "value": "suv", "label": "SUV" }, { "value": "hatch", "label": "Hatchback / wagon" }, { "value": "pickup", "label": "Pickup truck" }
+          ]
+        },
+        { "type": "image_picker", "id": "image", "label": "Photo instead of the drawing", "info": "Transparent PNG/WebP, side view, facing right. Variant images are used per paint if set." },
+        { "type": "text", "id": "tagline", "label": "Tagline", "default": "Built to move." },
+        { "type": "textarea", "id": "paints", "label": "Paint colours", "info": "One per line: Name: #hex — e.g. Rosso Red: #c3161f. Not needed if the Color option has swatches." },
+        { "type": "text", "id": "power", "label": "Power", "default": "300 hp" },
+        { "type": "text", "id": "accel", "label": "0–100 km/h", "default": "5.0 s" },
+        { "type": "text", "id": "range", "label": "Range", "default": "600 km" },
+        { "type": "text", "id": "top", "label": "Top speed", "default": "240 km/h" }
+      ]
+    }
+  ],
+  "max_blocks": 12,
+  "presets": [
+    { "name": "Car road run", "blocks": [ { "type": "car" }, { "type": "car" }, { "type": "car" }, { "type": "car" } ] }
+  ]
+}
+{% endschema %}

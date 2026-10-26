@@ -45,6 +45,7 @@
       cars = ids.map(function (id) { return cars.filter(function (c) { return c.id === id; })[0]; }).filter(Boolean);
     }
     cars = cars.filter(function (c) { return c.paints && c.paints.length; });
+    if (window.CarArt) window.CarArt.fill(cars);
     var N = cars.length;
     if (!N) return null;
     var cur = sec.getAttribute('data-currency') || document.documentElement.getAttribute('data-currency') || 'USD';

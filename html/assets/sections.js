@@ -77,6 +77,7 @@
     }
     var json = sec.querySelector('[data-pg-json]');
     var list = (json ? JSON.parse(json.textContent) : (window.CARS || [])).filter(function (p) { return p.paints && p.paints.length; });
+    if (window.CarArt) window.CarArt.fill(list);
     var limit = +sec.getAttribute('data-limit') || 8;
     function filtered(f) {
       return list.filter(function (p) { return !f || f === 'all' || p.type === f || p.category === f; }).slice(0, limit);

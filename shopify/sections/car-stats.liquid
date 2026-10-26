@@ -1,0 +1,44 @@
+{%- comment -%} Stats band — big numbers count up when scrolled into view. {%- endcomment -%}
+{% render 'car-assets' %}
+{{ 'car-sections.css' | asset_url | stylesheet_tag }}
+<script src="{{ 'car-sections.js' | asset_url }}" defer></script>
+<section class="sx section stats" style="--night: {{ section.settings.background }}; --accent: {{ section.settings.accent }};" {{ section.shopify_attributes }}>
+  <div class="container">
+    <div class="stats-grid" data-reveal-stagger="0.1">
+      {%- for block in section.blocks -%}
+        <div class="stat" data-reveal {{ block.shopify_attributes }}>
+          <span class="stat-k">{{ block.settings.kicker | escape }}</span>
+          <span class="stat-num" data-count-to="{{ block.settings.number }}"><span data-count>{{ block.settings.number }}</span><small>{{ block.settings.unit | escape }}</small></span>
+          <span class="stat-label">{{ block.settings.label | escape }}</span>
+        </div>
+      {%- endfor -%}
+    </div>
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Car stats",
+  "tag": "div",
+  "class": "section-car-stats",
+  "settings": [
+    { "type": "color", "id": "background", "label": "Background", "default": "#0a0c10" },
+    { "type": "color", "id": "accent", "label": "Unit colour", "default": "#ff4d1a" }
+  ],
+  "blocks": [
+    { "type": "stat", "name": "Stat", "settings": [
+      { "type": "text", "id": "kicker", "label": "Small label", "default": "Quickest" },
+      { "type": "text", "id": "number", "label": "Number", "default": "2.4", "info": "Digits only, e.g. 620 or 2.4" },
+      { "type": "text", "id": "unit", "label": "Unit", "default": "s" },
+      { "type": "text", "id": "label", "label": "Description", "default": "0–100 km/h" }
+    ] }
+  ],
+  "max_blocks": 4,
+  "presets": [ { "name": "Car stats", "blocks": [
+    { "type": "stat", "settings": { "kicker": "Quickest", "number": "2.4", "unit": "s", "label": "0–100 km/h" } },
+    { "type": "stat", "settings": { "kicker": "Furthest", "number": "620", "unit": "km", "label": "Range on one charge" } },
+    { "type": "stat", "settings": { "kicker": "Strongest", "number": "760", "unit": "hp", "label": "Tri-motor all-wheel drive" } },
+    { "type": "stat", "settings": { "kicker": "Warranty", "number": "8", "unit": "yrs", "label": "Battery & powertrain cover" } }
+  ] } ]
+}
+{% endschema %}

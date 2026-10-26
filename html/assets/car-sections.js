@@ -56,7 +56,9 @@
     var json = sec.querySelector('[data-fin-json]');
     var cars;
     try { cars = json ? JSON.parse(json.textContent) : (window.CARS || []); } catch (e) { cars = []; }
+    cars = cars.filter(function (car) { return car.paints && car.paints.length; });
     if (!cars.length) return;
+    if (window.CarArt) window.CarArt.fill(cars);
     var c = cur(sec);
     var sel = sec.querySelector('[data-fin-car]');
     var down = sec.querySelector('[data-fin-down]');

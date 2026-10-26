@@ -1,0 +1,91 @@
+{%- comment -%}
+  Car configurator — for the product template. The car drives in, paint swatches repaint it and
+  the price + monthly estimate follow the chosen variant; Reserve adds that variant to the cart.
+  Uses the product option named Color / Colour / Paint (see snippets/car-json.liquid).
+{%- endcomment -%}
+{% render 'car-assets' %}
+{{ 'car-sections.css' | asset_url | stylesheet_tag }}
+{{ 'pages.css' | asset_url | stylesheet_tag }}
+<script src="{{ 'car-sections.js' | asset_url }}" defer></script>
+<script src="{{ 'car-config.js' | asset_url }}" defer></script>
+{%- assign s = section.settings -%}
+<div class="sx cfg" data-cfg data-currency="{{ cart.currency.iso_code }}" data-apr="{{ s.apr }}" data-months="{{ s.months }}" data-down="{{ s.down }}" {{ section.shopify_attributes }}>
+  <div class="container">
+    <div class="cfg-stage" style="--tone: {{ s.tone }};">
+      <span class="cfg-ghost" data-cfg-ghost aria-hidden="true"></span>
+      <div class="cfg-car" data-cfg-car></div>
+      <div class="cfg-tools">
+        <span class="cfg-chip" data-cfg-paint-name></span>
+        <button type="button" class="cfg-drive" data-cfg-drive><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"><circle cx="12" cy="12" r="8.5"/><circle cx="12" cy="12" r="2.2"/><path d="M3.8 10.6c2.6-.9 5.3-1.2 8.2-1.2s5.6.3 8.2 1.2M10 13.8 7 19.6M14 13.8l3 5.8"/></svg>{{ s.spin_label | escape }}</button>
+      </div>
+    </div>
+    <div class="cfg-grid">
+      <div>
+        <p class="cfg-cat" data-cfg-cat></p>
+        <h1 class="cfg-name" data-cfg-name>{{ product.title | escape }}</h1>
+        <p class="cfg-tag" data-cfg-tag></p>
+        <div class="cfg-desc rte" data-cfg-desc data-keep>{{ product.description }}</div>
+        <dl class="cfg-specs" data-cfg-specs data-reveal-stagger="0.05"></dl>
+      </div>
+      <aside class="cfg-panel">
+        <div class="cfg-price-row">
+          <div><small>{{ s.price_label | escape }}</small><span class="cfg-price" data-cfg-price></span></div>
+          {%- if s.show_monthly -%}<div class="cfg-month">or from<b data-cfg-month></b>/month*</div>{%- endif -%}
+        </div>
+        <div class="cfg-opt-head"><span>{{ s.paint_label | escape }}</span><span>Prices update as you pick</span></div>
+        <div class="cfg-paints" data-cfg-paints role="radiogroup" aria-label="{{ s.paint_label | escape }}"></div>
+        <div class="cfg-buy">
+          <button type="button" class="btn btn-dark" data-cfg-reserve>{{ s.reserve_label | escape }}</button>
+          {%- if s.test_label != blank -%}<a class="btn btn-line" href="{{ s.test_url | default: '#' }}">{{ s.test_label | escape }}</a>{%- endif -%}
+        </div>
+        <p class="cfg-msg" data-cfg-msg aria-live="polite"></p>
+        {%- if s.perks != blank -%}
+          <ul class="cfg-perks">
+            {%- assign perks = s.perks | newline_to_br | split: '<br />' -%}
+            {%- for perk in perks -%}{%- if perk != blank -%}<li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="m5 12 5 5 9-10"/></svg>{{ perk | strip | escape }}</li>{%- endif -%}{%- endfor -%}
+          </ul>
+        {%- endif -%}
+        {%- if s.show_monthly -%}<p style="margin-top:12px;font-size:12px;color:var(--muted)">*Example: {{ s.down }}% deposit, {{ s.months }} months, {{ s.apr }}% APR.</p>{%- endif -%}
+      </aside>
+    </div>
+  </div>
+  <div class="cfg-sticky" data-cfg-sticky>
+    <div><strong data-sticky-name></strong><span data-sticky-paint></span> · <span data-sticky-price></span></div>
+    <button type="button" class="btn btn-dark" data-sticky-reserve>{{ s.reserve_label | escape }}</button>
+  </div>
+  <script type="application/json" data-cfg-json>
+    {%- render 'car-json', product: product, fallback_style: s.style -%}
+  </script>
+</div>
+
+{% schema %}
+{
+  "name": "Car configurator",
+  "tag": "section",
+  "class": "section-car-configurator",
+  "enabled_on": { "templates": ["product"] },
+  "settings": [
+    {
+      "type": "select", "id": "style", "label": "Drawing when the product has no body style", "default": "sedan",
+      "info": "Set the metafield custom.body_style per product to override.",
+      "options": [
+        { "value": "sedan", "label": "Sedan" }, { "value": "ev", "label": "Electric sedan" }, { "value": "coupe", "label": "Sports coupe" },
+        { "value": "suv", "label": "SUV" }, { "value": "hatch", "label": "Hatchback / wagon" }, { "value": "pickup", "label": "Pickup truck" }
+      ]
+    },
+    { "type": "text", "id": "price_label", "label": "Price label", "default": "Price in this paint" },
+    { "type": "text", "id": "paint_label", "label": "Paint label", "default": "Paint" },
+    { "type": "text", "id": "reserve_label", "label": "Reserve button", "default": "Reserve" },
+    { "type": "text", "id": "test_label", "label": "Second button", "default": "Book a test drive" },
+    { "type": "url", "id": "test_url", "label": "Second button link" },
+    { "type": "text", "id": "spin_label", "label": "Drive button", "default": "Take it for a spin" },
+    { "type": "textarea", "id": "perks", "label": "Perks (one per line)", "default": "Refundable reservation deposit\nFree home delivery within 100 km\n8-year battery & powertrain warranty" },
+    { "type": "checkbox", "id": "show_monthly", "label": "Show monthly estimate", "default": true },
+    { "type": "range", "id": "down", "label": "Estimate deposit", "min": 0, "max": 50, "step": 5, "unit": "%", "default": 20 },
+    { "type": "range", "id": "months", "label": "Estimate term", "min": 12, "max": 96, "step": 12, "unit": "mo", "default": 48 },
+    { "type": "range", "id": "apr", "label": "Estimate APR", "min": 0, "max": 15, "step": 0.1, "unit": "%", "default": 4.9 },
+    { "type": "color", "id": "tone", "label": "Stage colour", "default": "#eef0f2" }
+  ],
+  "presets": [ { "name": "Car configurator" } ]
+}
+{% endschema %}

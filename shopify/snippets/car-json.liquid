@@ -1,0 +1,96 @@
+{%- comment -%}
+  One car as JSON for the car sections (Road Run, Showroom, grid, finance, configurator).
+  Paints come from the product's Color / Colour / Paint option (one paint per value; its price is
+  that variant's price). Colours: Shopify swatches if set, else the "paints" text ("Name: #hex"
+  per line), else a guess from the name ("Midnight Blue" → blue).
+
+  Usage:
+    {% render 'car-json', product: p, style: 'suv', tagline: '', paints: '', image: block.settings.image,
+       power: '', accel: '', range: '', top: '', badge: '', fallback_style: 'sedan' %}
+  Any empty value falls back to the product metafields custom.body_style, custom.tagline,
+  custom.power, custom.accel, custom.range, custom.top_speed, custom.paint_colors;
+  fallback_style is used when neither style nor the metafield is set.
+{%- endcomment -%}
+{%- liquid
+  assign mf = product.metafields.custom
+  assign c_style = style | default: mf.body_style.value | default: fallback_style | default: 'sedan' | downcase
+  assign c_tagline = tagline | default: mf.tagline.value
+  assign c_paints = paints | default: mf.paint_colors.value | default: ''
+  assign c_power = power | default: mf.power.value
+  assign c_accel = accel | default: mf.accel.value
+  assign c_range = range | default: mf.range.value
+  assign c_top = top | default: mf.top_speed.value
+
+  assign ci = -1
+  for o in product.options_with_values
+    assign on = o.name | downcase
+    if on contains 'color' or on contains 'colour' or on contains 'paint' or on contains 'finish'
+      assign ci = forloop.index0
+      break
+    endif
+  endfor
+  assign map_lines = c_paints | newline_to_br | split: '<br />'
+-%}
+{
+  "id": {{ product.handle | json }},
+  "name": {{ product.title | json }},
+  "tagline": {{ c_tagline | default: '' | json }},
+  "style": {{ c_style | json }},
+  "url": {{ product.url | json }},
+  "price": {{ product.price | money | json }},
+  "categoryLabel": {{ product.type | json }},
+  "badge": {{ badge | default: '' | json }},
+  "description": {{ product.description | strip_html | truncatewords: 40 | json }},
+  "image": {% if image != blank %}{{ image | image_url: width: 1600 | json }}{% else %}null{% endif %},
+  "specs": { "power": {{ c_power | default: '' | json }}, "accel": {{ c_accel | default: '' | json }}, "range": {{ c_range | default: '' | json }}, "top": {{ c_top | default: '' | json }} },
+  "paints": [
+    {%- assign seen = '|' -%}
+    {%- assign firstp = true -%}
+    {%- for v in product.variants -%}
+      {%- liquid
+        if ci >= 0
+          assign pname = v.options[ci]
+        elsif v.title == 'Default Title'
+          assign pname = 'Standard'
+        else
+          assign pname = v.title
+        endif
+        assign key = '|' | append: pname | append: '|'
+        if seen contains key
+          continue
+        endif
+        assign seen = seen | append: pname | append: '|'
+
+        assign hexv = ''
+        if ci >= 0
+          for val in product.options_with_values[ci].values
+            if val == pname and val.swatch.color != blank
+              assign hexv = val.swatch.color | color_to_hex
+            endif
+          endfor
+        endif
+        if hexv == ''
+          assign pdown = pname | downcase | strip
+          for line in map_lines
+            assign parts = line | split: ':'
+            assign k = parts[0] | strip | downcase
+            if k == pdown and parts[1] != blank
+              assign hexv = parts[1] | strip
+            endif
+          endfor
+        endif
+      -%}
+      {%- unless firstp -%},{%- endunless -%}
+      {%- assign firstp = false -%}
+      {
+        "name": {{ pname | json }},
+        "hex": {{ hexv | json }},
+        "id": {{ v.id | json }},
+        "av": {{ v.available | json }},
+        "price": {{ v.price | money | json }},
+        "amount": {{ v.price | divided_by: 100.0 | json }},
+        "image": {% if v.featured_image %}{{ v.featured_image | image_url: width: 1600 | json }}{% else %}null{% endif %}
+      }
+    {%- endfor -%}
+  ]
+}

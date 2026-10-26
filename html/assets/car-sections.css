@@ -195,9 +195,12 @@
 .td-form .btn { height: 50px; padding: 0 22px; border-radius: 12px; }
 .td-form .btn::before { border-radius: 12px; }
 .td-form.is-error input:invalid, .td-form.is-error select:invalid { border-color: var(--accent); }
+.td-form .td-msg { grid-column: 1 / -1; margin: 4px 6px; color: var(--ink); text-align: center; }
 .td-msg { min-height: 20px; margin: 14px 0 0; font-size: 14px; color: rgba(255, 255, 255, .8); }
 .td-msg.is-ok { color: #b6f09c; animation: rise .5s var(--ease-out); }
 .td-msg.is-err { color: #ff9a8a; }
+.td-form .td-msg.is-ok { color: #1f7a3a; }
+.td-form .td-msg:empty { display: none; }
 @media (max-width: 799.98px) { .td-form { grid-template-columns: 1fr; } }
 @media (prefers-reduced-motion: reduce) { .td-car, .td-road::before, .td-car .car-wheel { animation: none; } .td-car { left: 10%; } }
 
@@ -217,3 +220,4 @@
   .section-head { flex-direction: column; align-items: flex-start; }
   .section-head .tabs { max-width: 100%; }
 }
+.bt-car img { display: block; width: 100%; height: auto; }

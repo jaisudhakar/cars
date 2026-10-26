@@ -1,0 +1,288 @@
+/* Road Run — pinned scroll road (see road-run.js) */
+.rr {
+  --horizon: 64%;
+  --rr-txt: #0d0f12;
+  --rr-muted: rgba(13, 15, 18, .62);
+  --rr-line: rgba(13, 15, 18, .16);
+  --rr-accent: var(--accent, #ff4d1a);
+  position: relative;
+  height: calc(100vh + var(--rr-n, 6) * 80vh);
+  background: #0a0c10;
+  color: var(--rr-txt);
+  font-family: var(--font-body-family, inherit);
+}
+.rr.rr-dark { --rr-txt: #fff; --rr-muted: rgba(255, 255, 255, .66); --rr-line: rgba(255, 255, 255, .22); }
+.rr-sticky {
+  --sky-top: #7fb8f0; --sky-bot: #e6f1fb; --night: 0; --dusk: 0;
+  position: sticky; top: 0; height: 100vh; height: 100svh; overflow: hidden;
+  background: linear-gradient(var(--sky-top), var(--sky-bot) var(--horizon));
+  isolation: isolate;
+}
+
+/* sky */
+.rr-stars {
+  position: absolute; inset: 0 0 calc(100% - var(--horizon)); opacity: var(--night); pointer-events: none;
+  background-image:
+    radial-gradient(1.2px 1.2px at 12% 18%, #fff 50%, transparent 51%), radial-gradient(1px 1px at 28% 8%, #fff 50%, transparent 51%),
+    radial-gradient(1.4px 1.4px at 44% 22%, #fff 50%, transparent 51%), radial-gradient(1px 1px at 58% 12%, #fff 50%, transparent 51%),
+    radial-gradient(1.2px 1.2px at 71% 30%, #fff 50%, transparent 51%), radial-gradient(1px 1px at 83% 9%, #fff 50%, transparent 51%),
+    radial-gradient(1.3px 1.3px at 92% 24%, #fff 50%, transparent 51%), radial-gradient(1px 1px at 6% 36%, #fff 50%, transparent 51%),
+    radial-gradient(1px 1px at 36% 38%, #fff 50%, transparent 51%), radial-gradient(1.2px 1.2px at 64% 42%, #fff 50%, transparent 51%);
+  animation: rrTwinkle 4s ease-in-out infinite alternate;
+}
+@keyframes rrTwinkle { to { filter: brightness(.6); } }
+.rr-sun {
+  position: absolute; right: 18%; top: 9%; width: clamp(70px, 9vw, 130px); aspect-ratio: 1; border-radius: 50%;
+  background: radial-gradient(circle, #fffbe8 0 38%, #ffd88a 60%, rgba(255, 190, 110, 0) 72%);
+  box-shadow: 0 0 120px 40px rgba(255, 200, 120, calc(.25 + var(--dusk) * .35));
+  opacity: calc(1 - var(--night)); will-change: transform;
+}
+.rr-moon {
+  position: absolute; left: 14%; top: 12%; width: clamp(38px, 4vw, 60px); aspect-ratio: 1; border-radius: 50%;
+  box-shadow: inset -12px -6px 0 0 #e9edf5; opacity: var(--night);
+  filter: drop-shadow(0 0 18px rgba(220, 230, 255, .5));
+}
+.rr-ghost {
+  position: absolute; left: 0; right: 0; top: calc(var(--horizon) - 22%); z-index: 0;
+  font-family: var(--font-heading-family, inherit); font-stretch: 125%; font-weight: 900; font-style: italic;
+  font-size: clamp(90px, 17vw, 300px); line-height: 1; letter-spacing: -.04em; text-transform: uppercase; text-align: center;
+  white-space: nowrap; color: rgba(255, 255, 255, .28); pointer-events: none; user-select: none;
+  will-change: transform;
+}
+
+/* scenery layers (tiles repeat sideways; JS slides them). The image is set inline on each layer
+   so its path resolves from the page (or from asset_url in Shopify). */
+.rr-layer {
+  position: absolute; left: 0; background-repeat: repeat-x; background-size: auto 100%; background-position: left bottom;
+  pointer-events: none; will-change: transform;
+}
+.rr-mtn { top: calc(var(--horizon) - 30%); height: 30%; z-index: 1; }
+.rr-city { top: calc(var(--horizon) - 24%); height: 24%; z-index: 2; }
+.rr-city-lights { top: calc(var(--horizon) - 24%); height: 24%; z-index: 4; opacity: var(--night); }
+.rr-lamps { top: calc(var(--horizon) - 33%); height: 36%; z-index: 5; }
+.rr-lamps-glow { top: calc(var(--horizon) - 33%); height: 36%; z-index: 7; opacity: var(--night); mix-blend-mode: screen; }
+.rr-tint {
+  /* golden hour wash + night shade over the scenery, under the lights */
+  position: absolute; inset: 0 0 calc(100% - var(--horizon) - 4%); z-index: 3; pointer-events: none;
+  background: linear-gradient(rgba(255, 150, 90, 0), rgba(255, 140, 80, .32));
+  opacity: var(--dusk);
+}
+.rr-shade { position: absolute; inset: 0; z-index: 6; pointer-events: none; background: rgba(6, 9, 20, .62); opacity: var(--night); }
+
+/* road */
+.rr-road {
+  position: absolute; left: 0; right: 0; top: var(--horizon); bottom: 0; z-index: 6;
+  background: linear-gradient(#4a4e55, #2a2d32 22%, #1c1e22 70%, #141619);
+}
+.rr-road::before {
+  /* pavement + kerb */
+  content: ''; position: absolute; left: 0; right: 0; top: -14px; height: 14px;
+  background: linear-gradient(#cfd3d6, #a9adb2);
+  box-shadow: 0 6px 0 0 #8a8e93;
+}
+.rr-road::after {
+  /* night: dim the asphalt */
+  content: ''; position: absolute; inset: -14px 0 0; background: #05070c; opacity: calc(var(--night) * .45); pointer-events: none;
+}
+.rr-lane {
+  position: absolute; left: 0; right: 0; top: 34%; height: 5px; z-index: 1;
+  background: repeating-linear-gradient(90deg, rgba(255, 255, 255, .85) 0 90px, transparent 90px 190px);
+  filter: drop-shadow(0 0 calc(var(--night) * 6px) rgba(255, 255, 255, .6));
+}
+.rr-edge { position: absolute; left: 0; right: 0; bottom: 7%; height: 4px; z-index: 1; background: rgba(255, 255, 255, .55); }
+.rr-road-sheen {
+  position: absolute; inset: 0; z-index: 1;
+  background: radial-gradient(60% 70% at 60% 60%, rgba(255, 255, 255, .06), transparent 70%);
+}
+
+/* cars */
+.rr-scrim {
+  /* keeps the text panel readable over the scenery: light by day, dark at night */
+  position: absolute; left: 0; top: 0; bottom: calc(100% - var(--horizon)); width: 56%; z-index: 8; pointer-events: none;
+}
+.rr-scrim::before, .rr-scrim::after { content: ''; position: absolute; inset: 0; }
+.rr-scrim::before { background: linear-gradient(90deg, rgba(232, 241, 250, .85), rgba(232, 241, 250, .5) 55%, rgba(232, 241, 250, 0)); opacity: calc(1 - var(--night)); }
+.rr-scrim::after { background: linear-gradient(90deg, rgba(4, 6, 12, .78), rgba(4, 6, 12, .4) 55%, rgba(4, 6, 12, 0)); opacity: var(--night); }
+.rr-cars { position: absolute; inset: 0; z-index: 9; pointer-events: none; }
+.rr-car { position: absolute; left: 0; top: 0; width: 640px; visibility: hidden; will-change: transform; }
+.rr-car-in { position: relative; transform-origin: 30% 92%; }
+.rr-car svg, .rr-car img { display: block; width: 100%; height: auto; overflow: visible; }
+.rr-car .car-paint { transition: fill .7s cubic-bezier(.22, 1, .36, 1); }
+.rr-car .car-head { filter: drop-shadow(0 0 calc(var(--night) * 10px) #fff2b0); }
+.rr-car .car-tail { filter: drop-shadow(0 0 calc(var(--night) * 8px) #ff2a2a); }
+.rr-car.is-parked .car-body { animation: rrIdle 2.4s ease-in-out infinite; }
+@keyframes rrIdle { 50% { transform: translateY(1.2px); } }
+.rr-beam {
+  position: absolute; left: 93%; top: 47%; width: 80%; height: 50%; z-index: -1; pointer-events: none;
+  background: linear-gradient(90deg, rgba(255, 244, 200, .55), rgba(255, 244, 200, 0) 85%);
+  clip-path: polygon(0 42%, 100% 0, 100% 100%, 0 58%);
+  filter: blur(6px); opacity: var(--night);
+}
+.rr-car-in.is-shine svg, .rr-car-in.is-shine img { animation: rrFlash .7s ease; }
+@keyframes rrFlash { 30% { filter: brightness(1.45) saturate(1.25); } }
+
+/* info panel (top left, above the road) */
+.rr-info {
+  position: absolute; z-index: 20; left: max(var(--gutter, 24px), 4vw); top: clamp(80px, 11vh, 130px);
+  width: min(480px, 38vw); color: var(--rr-txt); transition: color .5s ease;
+}
+.rr-idx { font-size: 12px; letter-spacing: .22em; color: var(--rr-muted); font-variant-numeric: tabular-nums; }
+.rr-idx span:first-child { color: var(--rr-txt); font-weight: 700; }
+.rr-cat { margin: 16px 0 0; font-size: 12px; font-weight: 700; letter-spacing: .16em; text-transform: uppercase; color: var(--rr-accent); }
+.rr-name {
+  margin: 6px 0 0; font-family: var(--font-heading-family, inherit); font-stretch: var(--heading-stretch, 118%);
+  font-size: clamp(40px, 4.4vw, 68px); font-weight: 900; line-height: .92; letter-spacing: -.035em; text-transform: uppercase;
+}
+.rr-tag { margin: 8px 0 0; font-family: var(--font-accent, serif); font-style: italic; font-size: clamp(20px, 1.7vw, 25px); color: var(--rr-muted); }
+.rr-price { display: flex; flex-wrap: wrap; align-items: baseline; gap: 4px 14px; margin-top: 18px; }
+.rr-price small { width: 100%; font-size: 11px; font-weight: 700; letter-spacing: .14em; text-transform: uppercase; color: var(--rr-muted); }
+.rr-price strong {
+  display: inline-block; font-size: clamp(30px, 2.7vw, 40px); font-weight: 800; letter-spacing: -.02em; font-variant-numeric: tabular-nums;
+  padding-bottom: 4px; background: linear-gradient(var(--rr-paint, var(--rr-accent)), var(--rr-paint, var(--rr-accent))) left bottom / 100% 4px no-repeat;
+}
+.rr-price strong.is-bump { animation: rrBump .5s cubic-bezier(.22, 1, .36, 1); }
+@keyframes rrBump { 40% { transform: translateY(-3px) scale(1.04); } }
+.rr-paint-name { display: inline-flex; align-items: center; gap: 8px; font-size: 14px; font-weight: 600; color: var(--rr-muted); }
+.rr-paint-name::before { content: ''; width: 10px; height: 10px; border-radius: 50%; background: var(--rr-paint, #999); box-shadow: 0 0 0 1px var(--rr-line); }
+
+.rr-paints { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px; margin-top: 16px; }
+.rr-paint {
+  display: flex; align-items: center; gap: 10px; min-width: 0; padding: 6px 12px 6px 6px;
+  border: 1px solid var(--rr-line); border-radius: 999px; background: rgba(255, 255, 255, .55);
+  color: var(--rr-txt); text-align: left; cursor: pointer;
+  transition: border-color .25s ease, background .25s ease, transform .2s ease;
+}
+.rr-dark .rr-paint { background: rgba(255, 255, 255, .06); }
+.rr-paint:hover { border-color: var(--rr-txt); }
+.rr-paint:active { transform: scale(.97); }
+.rr-paint i {
+  flex: 0 0 auto; width: 28px; height: 28px; border-radius: 50%; background-color: var(--c);
+  background-image: radial-gradient(circle at 32% 28%, rgba(255, 255, 255, .7), rgba(255, 255, 255, 0) 45%), linear-gradient(transparent 55%, rgba(0, 0, 0, .3));
+  box-shadow: inset 0 0 0 1px rgba(0, 0, 0, .15);
+  transition: box-shadow .3s ease;
+}
+.rr-paint-txt { display: grid; min-width: 0; line-height: 1.2; }
+.rr-paint-txt span { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-size: 13px; font-weight: 600; }
+.rr-paint-txt b { font-size: 11.5px; font-weight: 500; color: var(--rr-muted); font-variant-numeric: tabular-nums; }
+.rr-paint[aria-checked="true"] { border-color: var(--rr-txt); background: rgba(255, 255, 255, .92); }
+.rr-dark .rr-paint[aria-checked="true"] { background: rgba(255, 255, 255, .16); }
+.rr-paint[aria-checked="true"] i { box-shadow: 0 0 0 2px #fff, 0 0 0 4px var(--c); }
+.rr-paint.is-na { opacity: .45; }
+
+/* swap animation when the next car parks */
+.rr.rr-swap .rr-name, .rr.rr-swap .rr-tag, .rr.rr-swap .rr-cat, .rr.rr-swap .rr-specs, .rr.rr-swap .rr-paints {
+  animation: rrSwap .65s cubic-bezier(.22, 1, .36, 1) both;
+}
+.rr.rr-swap .rr-tag { animation-delay: .05s; }
+.rr.rr-swap .rr-paints { animation-delay: .1s; }
+.rr.rr-swap .rr-specs { animation-delay: .15s; }
+@keyframes rrSwap { from { opacity: 0; transform: translateY(16px); filter: blur(4px); } }
+/* panel dims while a car is driving between stops */
+.rr-info > :not(.rr-idx), .rr-specs, .rr-ctas { transition: opacity .45s ease; }
+.rr:not(.rr-has-car) .rr-info > :not(.rr-idx), .rr:not(.rr-has-car) .rr-specs, .rr:not(.rr-has-car) .rr-ctas { opacity: .3; }
+
+/* steps list (right) */
+.rr-steps {
+  position: absolute; right: max(var(--gutter, 24px), 3vw); top: clamp(80px, 11vh, 130px); z-index: 20;
+  list-style: none; margin: 0; padding: 0 0 0 16px; border-left: 1px solid var(--rr-line);
+}
+.rr-steps::before {
+  content: ''; position: absolute; left: -1px; top: 0; width: 1px; height: calc(var(--rr-prog, 0) * 100%); background: var(--rr-txt);
+}
+.rr-steps button {
+  display: flex; align-items: center; gap: 10px; padding: 6px 0; border: 0; background: none; cursor: pointer;
+  color: var(--rr-muted); font-size: 12px; font-weight: 700; letter-spacing: .14em; text-transform: uppercase;
+  transition: color .3s ease;
+}
+.rr-steps button span { font-variant-numeric: tabular-nums; opacity: .6; }
+.rr-steps button i { width: 0; height: 2px; background: var(--rr-accent); transition: width .5s cubic-bezier(.22, 1, .36, 1); }
+.rr-steps button:hover, .rr-steps button.is-on { color: var(--rr-txt); }
+.rr-steps button.is-on i { width: 22px; }
+
+/* dashboard on the road: speedometer, specs, buttons */
+.rr-dash {
+  position: absolute; left: max(var(--gutter, 24px), 4vw); right: max(var(--gutter, 24px), 4vw); bottom: 3.5vh; z-index: 20;
+  display: flex; align-items: center; gap: clamp(20px, 3vw, 48px); color: #fff;
+}
+.rr-hud { display: flex; align-items: center; gap: 14px; flex: 0 0 auto; }
+.rr-gauge { position: relative; width: 96px; height: 96px; }
+.rr-gauge svg { width: 100%; height: 100%; }
+.rr-needle {
+  position: absolute; left: 50%; top: 50%; width: 2px; height: 38px; margin: -38px 0 0 -1px;
+  background: linear-gradient(var(--rr-accent), rgba(255, 77, 26, .3)); border-radius: 2px;
+  transform-origin: 50% 100%; transform: rotate(-120deg); transition: transform .12s linear;
+}
+.rr-needle::after { content: ''; position: absolute; left: -4px; bottom: -5px; width: 10px; height: 10px; border-radius: 50%; background: #fff; }
+.rr-gauge-num { position: absolute; left: 0; right: 0; bottom: 10px; text-align: center; font-size: 17px; font-weight: 800; font-variant-numeric: tabular-nums; line-height: 1; }
+.rr-gauge-num small { display: block; margin-top: 2px; font-size: 8px; font-weight: 600; letter-spacing: .18em; opacity: .6; }
+.rr-odo { font-size: 10px; letter-spacing: .2em; text-transform: uppercase; opacity: .75; }
+.rr-odo b { display: block; margin-top: 4px; padding: 4px 8px; border-radius: 4px; background: rgba(0, 0, 0, .45); font-size: 14px; letter-spacing: .24em; font-variant-numeric: tabular-nums; }
+.rr-specs { display: grid; grid-template-columns: repeat(4, auto); gap: clamp(16px, 2.4vw, 40px); margin: 0; padding-left: clamp(20px, 3vw, 48px); border-left: 1px solid rgba(255, 255, 255, .18); }
+.rr-specs dt { font-size: 10.5px; font-weight: 700; letter-spacing: .12em; text-transform: uppercase; color: rgba(255, 255, 255, .55); }
+.rr-specs dd { margin: 4px 0 0; font-family: var(--font-heading-family, inherit); font-stretch: 118%; font-size: clamp(18px, 1.6vw, 24px); font-weight: 800; letter-spacing: -.01em; white-space: nowrap; }
+.rr-ctas { position: relative; display: flex; align-items: center; gap: 22px; margin-left: auto; }
+.rr-ctas .btn { height: 50px; }
+.rr-ctas .btn.is-busy { pointer-events: none; opacity: .7; }
+.rr-ctas .link-arrow { color: #fff; }
+.rr-msg {
+  position: absolute; right: 0; bottom: calc(100% + 12px); display: flex; flex-wrap: wrap; align-items: center; justify-content: flex-end; gap: 6px;
+  width: max-content; max-width: 80vw; margin: 0; font-size: 13px; color: #fff;
+}
+.rr-msg a { color: inherit; font-weight: 700; }
+.rr-msg.is-ok { animation: rrSwap .5s ease both; }
+.rr-msg.is-ok i { width: 14px; height: 14px; border-radius: 50%; background: var(--rr-accent); }
+.rr-msg.is-err { color: #ff8a7e; }
+
+/* scroll hint + progress */
+.rr-hint {
+  position: absolute; left: 50%; top: clamp(80px, 11vh, 130px); z-index: 20; transform: translateX(-50%);
+  display: flex; flex-direction: column; align-items: center; gap: 8px;
+  color: var(--rr-txt); font-size: 11px; font-weight: 600; letter-spacing: .2em; text-transform: uppercase;
+  transition: opacity .5s ease, transform .5s ease;
+}
+.rr-hint i { position: relative; width: 22px; height: 34px; border: 1.5px solid currentColor; border-radius: 12px; }
+.rr-hint i::after { content: ''; position: absolute; left: 50%; top: 7px; width: 3px; height: 7px; margin-left: -1.5px; border-radius: 2px; background: currentColor; animation: rrWheel 1.6s ease-in-out infinite; }
+@keyframes rrWheel { 60% { transform: translateY(9px); opacity: 0; } 100% { opacity: 0; } }
+.rr-hint.is-gone { opacity: 0; transform: translate(-50%, 12px); pointer-events: none; }
+.rr-bar { position: absolute; left: 0; right: 0; bottom: 0; z-index: 21; height: 3px; background: rgba(255, 255, 255, .12); }
+.rr-bar i { display: block; height: 100%; background: var(--rr-paint, var(--rr-accent)); transform-origin: left; transform: scaleX(var(--rr-prog, 0)); transition: background .6s ease; }
+
+/* entrance */
+.rr-info, .rr-steps, .rr-dash { opacity: 0; transition: opacity .8s ease .2s, color .5s ease; }
+.rr.rr-in .rr-info, .rr.rr-in .rr-steps, .rr.rr-in .rr-dash { opacity: 1; }
+
+@media (max-width: 1199.98px) {
+  .rr-odo { display: none; }
+  .rr-specs { grid-template-columns: repeat(2, auto); row-gap: 8px; }
+}
+@media (max-width: 899.98px) {
+  .rr { --horizon: 58%; height: calc(100vh + var(--rr-n, 6) * 70vh); }
+  .rr-scrim { width: 100%; }
+  .rr-scrim::before { background: linear-gradient(rgba(232, 241, 250, .88), rgba(232, 241, 250, .4)); }
+  .rr-scrim::after { background: linear-gradient(rgba(4, 6, 12, .82), rgba(4, 6, 12, .35)); }
+  .rr-info { left: 20px; right: 20px; top: 72px; width: auto; }
+  .rr-cat { margin-top: 8px; }
+  .rr-name { font-size: clamp(34px, 10vw, 52px); }
+  .rr-tag { font-size: 18px; margin-top: 4px; }
+  .rr-price { margin-top: 12px; }
+  .rr-price strong { font-size: 28px; }
+  .rr-paints { display: flex; gap: 12px; margin-top: 12px; }
+  .rr-paint { padding: 0; border: 0; background: none !important; }
+  .rr-paint i { width: 34px; height: 34px; }
+  .rr-paint-txt { display: none; }
+  .rr-steps, .rr-ghost, .rr-specs, .rr-hint { display: none; }
+  .rr-dash { left: 16px; right: 80px; bottom: 16px; gap: 12px; }   /* leaves room for the back-to-top button */
+  .rr-gauge { width: 70px; height: 70px; }
+  .rr-needle { height: 26px; margin-top: -26px; }
+  .rr-gauge-num { bottom: 6px; font-size: 13px; }
+  .rr-ctas { gap: 14px; }
+  .rr-ctas .btn { height: 46px; padding: 0 20px; }
+  .rr-msg { max-width: calc(100vw - 32px); font-size: 12px; }
+}
+@media (max-width: 479.98px) {
+  .rr-ctas .link-arrow { display: none; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .rr-stars, .rr-car.is-parked .car-body { animation: none; }
+  .rr.rr-swap * { animation: none !important; }
+}

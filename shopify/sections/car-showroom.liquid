@@ -1,0 +1,119 @@
+{%- comment -%}
+  Showroom wheel — cars ride a large circle; the one in front is the active model. Drag the cars
+  or the knurled wheel (or scroll sideways / arrow keys). Paint swatches repaint the front car and
+  update the price; Reserve adds that car + paint to the cart. One block per car.
+{%- endcomment -%}
+{% render 'car-assets' %}
+{{ 'car-orbit.css' | asset_url | stylesheet_tag }}
+<script src="{{ 'car-orbit.js' | asset_url }}" defer></script>
+
+{%- liquid
+  assign s = section.settings
+  assign count = 0
+  for block in section.blocks
+    if block.settings.product != blank
+      assign count = count | plus: 1
+    endif
+  endfor
+  assign count_label = count | prepend: '0' | slice: -2, 2
+-%}
+<section
+  id="showroom-{{ section.id }}"
+  class="sx orbit"
+  data-orbit-section
+  aria-label="{{ s.label | escape }}"
+  style="--orbit-height: max({{ s.min_height }}px, {{ s.height }}vh); --orbit-accent: {{ s.accent }};"
+  {{ section.shopify_attributes }}
+>
+  <div class="orbit-stage" data-orbit-stage data-cursor="Drag">
+    <div class="orbit-ring" data-orbit-ring aria-hidden="true"></div>
+  </div>
+
+  <div class="orbit-info" aria-live="polite">
+    <div class="orbit-idx" data-orbit-idx>01 / {{ count_label }}</div>
+    <h2 class="orbit-name" data-orbit-name></h2>
+    <p class="orbit-meta" data-orbit-meta></p>
+    <div class="orbit-price" data-orbit-price></div>
+    <a class="orbit-details" href="#" data-orbit-details>{{ s.details_label | escape }} <span aria-hidden="true">&rarr;</span></a>
+  </div>
+
+  <div
+    class="orbit-wheel"
+    data-orbit-wheel
+    role="slider"
+    tabindex="0"
+    aria-label="Turn the wheel to choose a car"
+    aria-valuemin="1"
+    aria-valuemax="{{ count }}"
+    aria-valuenow="1"
+  >
+    <span class="orbit-wheel-dot" aria-hidden="true"></span>
+    <div class="orbit-wheel-track" data-orbit-track></div>
+    <div class="orbit-wheel-labels" aria-hidden="true"><span>01</span><span>{{ s.wheel_label | escape }}</span><span data-orbit-max>{{ count_label }}</span></div>
+  </div>
+
+  <div class="orbit-paints-wrap">
+    <div class="orbit-paints-head"><span>{{ s.paint_label | escape }}</span><span data-orbit-paint></span></div>
+    <div class="orbit-paints" data-orbit-paints role="radiogroup" aria-label="{{ s.paint_label | escape }}"></div>
+    <button type="button" class="orbit-reserve" data-orbit-reserve>{{ s.reserve_label | escape }}</button>
+    <p class="orbit-msg" data-orbit-msg aria-live="polite"></p>
+  </div>
+
+  <script type="application/json" data-orbit-json>
+    [
+      {%- assign first = true -%}
+      {%- for block in section.blocks -%}
+        {%- assign p = block.settings.product -%}
+        {%- if p == blank -%}{%- continue -%}{%- endif -%}
+        {%- unless first -%},{%- endunless -%}
+        {%- assign first = false -%}
+        {%- render 'car-json', product: p, style: block.settings.style, tagline: block.settings.tagline, paints: block.settings.paints, image: block.settings.image, power: block.settings.power, accel: block.settings.accel, range: block.settings.range, top: block.settings.top -%}
+      {%- endfor -%}
+    ]
+  </script>
+</section>
+
+{% schema %}
+{
+  "name": "Car showroom wheel",
+  "tag": "div",
+  "class": "section-car-showroom",
+  "settings": [
+    { "type": "text", "id": "label", "label": "Section name (screen readers)", "default": "Showroom — drag the wheel to choose a car" },
+    { "type": "text", "id": "details_label", "label": "Details link", "default": "View details" },
+    { "type": "text", "id": "wheel_label", "label": "Wheel label", "default": "Drag the wheel" },
+    { "type": "text", "id": "paint_label", "label": "Paint label", "default": "Paint" },
+    { "type": "text", "id": "reserve_label", "label": "Reserve button", "default": "Reserve" },
+    { "type": "color", "id": "accent", "label": "Accent (wheel dot, added tick)", "default": "#ff4d1a" },
+    { "type": "range", "id": "height", "label": "Section height", "min": 60, "max": 100, "step": 2, "unit": "vh", "default": 100 },
+    { "type": "range", "id": "min_height", "label": "Min height", "min": 560, "max": 1000, "step": 20, "unit": "px", "default": 760 }
+  ],
+  "blocks": [
+    {
+      "type": "car",
+      "name": "Car",
+      "settings": [
+        { "type": "product", "id": "product", "label": "Product", "info": "Paints come from the option named Color, Colour or Paint. Each paint's price is that variant's price." },
+        {
+          "type": "select", "id": "style", "label": "Body (built-in drawing)", "default": "sedan",
+          "options": [
+            { "value": "sedan", "label": "Sedan" }, { "value": "ev", "label": "Electric sedan" }, { "value": "coupe", "label": "Sports coupe" },
+            { "value": "suv", "label": "SUV" }, { "value": "hatch", "label": "Hatchback / wagon" }, { "value": "pickup", "label": "Pickup truck" }
+          ]
+        },
+        { "type": "image_picker", "id": "image", "label": "Photo instead of the drawing", "info": "Transparent PNG/WebP, side view, facing right. Variant images are used per paint if set." },
+        { "type": "text", "id": "tagline", "label": "Tagline", "default": "Built to move." },
+        { "type": "textarea", "id": "paints", "label": "Paint colours", "info": "One per line: Name: #hex — e.g. Rosso Red: #c3161f. Not needed if the Color option has swatches." },
+        { "type": "text", "id": "power", "label": "Power", "default": "300 hp" },
+        { "type": "text", "id": "accel", "label": "0–100 km/h", "default": "5.0 s" },
+        { "type": "text", "id": "range", "label": "Range", "default": "600 km" },
+        { "type": "text", "id": "top", "label": "Top speed", "default": "240 km/h" }
+      ]
+    }
+  ],
+  "max_blocks": 12,
+  "presets": [
+    { "name": "Car showroom wheel", "blocks": [ { "type": "car" }, { "type": "car" }, { "type": "car" }, { "type": "car" }, { "type": "car" } ] }
+  ]
+}
+{% endschema %}

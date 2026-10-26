@@ -1,0 +1,8 @@
+{%- comment -%}
+  Turns *word* into an italic accent word: {% render 'car-accent', text: section.settings.heading %}
+{%- endcomment -%}
+{%- assign parts = text | escape | split: '*' -%}
+{%- for part in parts -%}
+  {%- assign odd = forloop.index0 | modulo: 2 -%}
+  {%- if odd == 1 -%}<em>{{ part }}</em>{%- else -%}{{ part }}{%- endif -%}
+{%- endfor -%}

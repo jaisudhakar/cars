@@ -244,5 +244,14 @@
     return (r * 299 + g * 587 + b * 114) / 1000 > 160;
   }
 
-  window.CarArt = { svg: svg, dataUri: dataUri, paint: paint, spin: spin, hex: hex, isLight: light, styles: Object.keys(STYLES), GROUND: GROUND };
+  /* fill in what Shopify data may leave out: a body style and a colour for every paint */
+  function fill(cars) {
+    (cars || []).forEach(function (c) {
+      if (!STYLES[c.style]) c.style = 'sedan';
+      (c.paints || []).forEach(function (p) { if (!p.hex) p.hex = hex(p.name); });
+    });
+    return cars;
+  }
+
+  window.CarArt = { svg: svg, dataUri: dataUri, paint: paint, spin: spin, hex: hex, fill: fill, isLight: light, styles: Object.keys(STYLES), GROUND: GROUND };
 })();

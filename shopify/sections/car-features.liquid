@@ -1,0 +1,84 @@
+{%- comment -%}
+  Feature scroll — a sticky picture panel follows the active point as you scroll. Each block
+  shows a car drawing (or your photo) in its own paint.
+{%- endcomment -%}
+{% render 'car-assets' %}
+{{ 'sections.css' | asset_url | stylesheet_tag }}
+{{ 'car-sections.css' | asset_url | stylesheet_tag }}
+<script src="{{ 'car-sections.js' | asset_url }}" defer></script>
+<script src="{{ 'sections.js' | asset_url }}" defer></script>
+{%- assign s = section.settings -%}
+<section class="sx section" data-feat style="--feat-bg: {{ s.panel }}; --accent: {{ s.accent }};" {{ section.shopify_attributes }}>
+  <div class="container feat-in">
+    <div class="feat-media" aria-hidden="true">
+      <div class="feat-frame">
+        <div class="feat-progress">{%- for block in section.blocks -%}<i></i>{%- endfor -%}</div>
+        {%- for block in section.blocks -%}
+          {%- if block.settings.image != blank -%}
+            <figure class="feat-img">{{ block.settings.image | image_url: width: 1400 | image_tag: loading: 'lazy', alt: '' }}</figure>
+          {%- else -%}
+            <figure class="feat-img" data-car-art="{{ block.settings.style }}" data-paint="{{ block.settings.paint }}"></figure>
+          {%- endif -%}
+        {%- endfor -%}
+        <span class="feat-big" data-feat-num>01</span>
+      </div>
+    </div>
+    <div class="feat-list">
+      <header>
+        {%- if s.eyebrow != blank -%}<p class="eyebrow" data-reveal>{{ s.eyebrow | escape }}</p>{%- endif -%}
+        <h2 class="h2" data-split style="margin-top:20px">{% render 'car-accent', text: s.heading %}</h2>
+      </header>
+      {%- for block in section.blocks -%}
+        <article class="feat-item" {{ block.shopify_attributes }}>
+          <span class="feat-idx">{{ forloop.index | prepend: '0' | slice: -2, 2 }} — {{ block.settings.kicker | escape }}</span>
+          <h3>{{ block.settings.title | escape }}</h3>
+          <p>{{ block.settings.text | escape }}</p>
+          {%- assign chips = block.settings.chips | split: ',' -%}
+          {%- if chips.size > 0 -%}<ul>{%- for c in chips -%}<li>{{ c | strip | escape }}</li>{%- endfor -%}</ul>{%- endif -%}
+          {%- if block.settings.image != blank -%}
+            <div class="feat-item-img">{{ block.settings.image | image_url: width: 900 | image_tag: loading: 'lazy', alt: '' }}</div>
+          {%- else -%}
+            <div class="feat-item-img" data-car-art="{{ block.settings.style }}" data-paint="{{ block.settings.paint }}"></div>
+          {%- endif -%}
+        </article>
+      {%- endfor -%}
+    </div>
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Car features",
+  "tag": "div",
+  "class": "section-car-features",
+  "settings": [
+    { "type": "text", "id": "eyebrow", "label": "Small label", "default": "Why us" },
+    { "type": "text", "id": "heading", "label": "Heading", "default": "Engineered for the *long way* home." },
+    { "type": "color", "id": "panel", "label": "Picture panel", "default": "#eceeef" },
+    { "type": "color", "id": "accent", "label": "Accent", "default": "#ff4d1a" }
+  ],
+  "blocks": [
+    { "type": "feature", "name": "Feature", "settings": [
+      { "type": "text", "id": "kicker", "label": "Small label", "default": "Performance" },
+      { "type": "text", "id": "title", "label": "Title", "default": "Launch-control quick." },
+      { "type": "textarea", "id": "text", "label": "Text", "default": "Twin-turbo V8s and tri-motor electric drive, tuned on the track and the school run alike." },
+      { "type": "text", "id": "chips", "label": "Chips (comma separated)", "default": "Up to 760 hp, Carbon-ceramic brakes" },
+      {
+        "type": "select", "id": "style", "label": "Car drawing", "default": "coupe",
+        "options": [
+          { "value": "sedan", "label": "Sedan" }, { "value": "ev", "label": "Electric sedan" }, { "value": "coupe", "label": "Sports coupe" },
+          { "value": "suv", "label": "SUV" }, { "value": "hatch", "label": "Hatchback / wagon" }, { "value": "pickup", "label": "Pickup truck" }
+        ]
+      },
+      { "type": "color", "id": "paint", "label": "Paint", "default": "#f2c21b" },
+      { "type": "image_picker", "id": "image", "label": "Photo instead of the drawing" }
+    ] }
+  ],
+  "max_blocks": 6,
+  "presets": [ { "name": "Car features", "blocks": [
+    { "type": "feature", "settings": { "kicker": "Performance", "title": "Launch-control quick.", "style": "coupe", "paint": "#f2c21b" } },
+    { "type": "feature", "settings": { "kicker": "Safety", "title": "Five stars, every model.", "text": "360° cameras, automatic emergency braking and lane centring come as standard.", "chips": "8 airbags, 360° camera", "style": "suv", "paint": "#eceff2" } },
+    { "type": "feature", "settings": { "kicker": "Electric", "title": "10 to 80% in 18 minutes.", "text": "800-volt charging and an eight-year battery warranty.", "chips": "800 V charging, 620 km range", "style": "ev", "paint": "#6b2fb3" } }
+  ] } ]
+}
+{% endschema %}

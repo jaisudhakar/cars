@@ -140,6 +140,9 @@ body:not(.header-hidden) .shop-bar { top: var(--header-h); }
 .cfg-msg { display: flex; flex-wrap: wrap; align-items: center; gap: 6px; min-height: 20px; margin: 12px 0 0; font-size: 14px; }
 .cfg-msg i { width: 14px; height: 14px; border-radius: 50%; background: var(--accent); }
 .cfg-msg a { font-weight: 700; }
+.cfg-msg.is-err { color: #b3261e; }
+.cfg-paint.is-na { opacity: .5; }
+.cfg-buy .btn:disabled { opacity: .4; cursor: not-allowed; }
 .cfg-perks { list-style: none; display: grid; gap: 10px; margin: 18px 0 0; padding: 16px 18px; border-radius: 14px; background: var(--mist); font-size: 14px; }
 .cfg-perks li { display: flex; align-items: center; gap: 10px; }
 .cfg-perks svg { width: 18px; height: 18px; flex: 0 0 auto; }
@@ -260,3 +263,4 @@ a.info-card:hover { background: var(--ink); color: #fff; transform: translateX(6
 @keyframes nfLost { 0%, 100% { transform: translateX(-30px); } 50% { transform: translateX(30px) scaleX(1); } }
 .nf-sign { display: inline-block; margin-bottom: 18px; padding: 8px 16px; border: 2px solid var(--ink); border-radius: 8px; font-size: 13px; font-weight: 800; letter-spacing: .14em; text-transform: uppercase; transform: rotate(-3deg); }
 .nf p { margin: 18px auto 30px; max-width: 420px; color: var(--muted); font-size: 18px; }
+@media (max-width: 899.98px) { body:has(.cfg-sticky.is-on) .to-top { bottom: 90px; } }

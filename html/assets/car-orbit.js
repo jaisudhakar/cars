@@ -25,6 +25,7 @@
     var items;
     try { items = json ? JSON.parse(json.textContent) : (window.CARS || []); } catch (e) { return null; }
     items = items.filter(function (p) { return p.paints && p.paints.length; });
+    if (window.CarArt) window.CarArt.fill(items);
     var N = items.length;
     if (!N) return null;
 
