@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en" data-currency="USD">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Configure your car — Veloce</title>
+  <meta name="description" content="Pick a paint, see the price and monthly payment, reserve or book a test drive.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Archivo:ital,wdth,wght@0,62..125,400..900;1,62..125,400..900&family=Inter:wght@400;500;600;700;800&family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet">
+  <script>document.documentElement.classList.add('motion-ready');</script>
+  <link rel="stylesheet" href="assets/base.css">
+  <link rel="stylesheet" href="assets/site.css">
+  <link rel="stylesheet" href="assets/motion.css">
+  <link rel="stylesheet" href="assets/sections.css">
+  <link rel="stylesheet" href="assets/car-sections.css">
+  <link rel="stylesheet" href="assets/pages.css">
+</head>
+<body class="sx">
+  <div data-site-header></div>
+  <script src="assets/brand.js"></script>
+  <script src="assets/site.js"></script>
+
+  <main id="main" data-page="car" class="cfg">
+    <div class="container">
+      <ol class="crumbs" data-reveal><li><a href="index.html">Home</a></li><li><a href="inventory.html">Inventory</a></li><li aria-current="page" data-cfg-crumb></li></ol>
+
+      <div class="cfg-stage">
+        <span class="cfg-ghost" data-cfg-ghost aria-hidden="true"></span>
+        <div class="cfg-car" data-cfg-car></div>
+        <div class="cfg-tools">
+          <span class="cfg-chip" data-cfg-paint-name></span>
+          <button type="button" class="cfg-drive" data-cfg-drive><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"><circle cx="12" cy="12" r="8.5"/><circle cx="12" cy="12" r="2.2"/><path d="M3.8 10.6c2.6-.9 5.3-1.2 8.2-1.2s5.6.3 8.2 1.2M10 13.8 7 19.6M14 13.8l3 5.8"/></svg>Take it for a spin</button>
+        </div>
+      </div>
+
+      <div class="cfg-grid">
+        <div>
+          <p class="cfg-cat" data-cfg-cat></p>
+          <h1 class="cfg-name" data-cfg-name></h1>
+          <p class="cfg-tag" data-cfg-tag></p>
+          <p class="cfg-desc" data-cfg-desc></p>
+          <dl class="cfg-specs" data-cfg-specs data-reveal-stagger="0.05"></dl>
+          <h2 class="h3" style="margin-top:clamp(40px,5vw,64px)">Highlights</h2>
+          <ul class="cfg-details" data-cfg-details></ul>
+        </div>
+        <aside class="cfg-panel" data-reveal="up">
+          <div class="cfg-price-row">
+            <div><small>Price in this paint</small><span class="cfg-price" data-cfg-price></span></div>
+            <div class="cfg-month">or from<b data-cfg-month></b>/month*</div>
+          </div>
+          <div class="cfg-opt-head"><span>Paint</span><span>Prices update as you pick</span></div>
+          <div class="cfg-paints" data-cfg-paints role="radiogroup" aria-label="Paint"></div>
+          <div class="cfg-buy">
+            <button type="button" class="btn btn-dark" data-cfg-reserve>Reserve</button>
+            <a class="btn btn-line" href="contact.html#test-drive" data-cfg-test>Test drive</a>
+          </div>
+          <p class="cfg-msg" data-cfg-msg aria-live="polite"></p>
+          <ul class="cfg-perks">
+            <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="m5 12 5 5 9-10"/></svg>Refundable $500 reservation deposit</li>
+            <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="m5 12 5 5 9-10"/></svg>Free home delivery within 100 km</li>
+            <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="m5 12 5 5 9-10"/></svg>8-year battery &amp; powertrain warranty</li>
+          </ul>
+          <p class="fin-note" style="margin-top:12px;font-size:12px;color:var(--muted)">*Example: 20% deposit, 48 months, 4.9% APR. <a href="index.html#finance">Try the calculator</a>.</p>
+        </aside>
+      </div>
+    </div>
+
+    <section class="section">
+      <div class="container">
+        <div class="section-head">
+          <div><p class="eyebrow" data-reveal>Keep exploring</p><h2 class="h2" data-split style="margin-top:16px">You might <em>also like</em></h2></div>
+          <a class="link-arrow" href="inventory.html" data-reveal>All inventory <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a>
+        </div>
+        <div class="cc-grid" data-cfg-related></div>
+      </div>
+    </section>
+
+    <div class="cfg-sticky" data-cfg-sticky>
+      <div><strong data-sticky-name></strong><span data-sticky-paint></span> · <span data-sticky-price></span></div>
+      <button type="button" class="btn btn-dark" data-sticky-reserve>Reserve</button>
+    </div>
+  </main>
+
+  <div data-site-footer></div>
+
+  <script src="assets/car-art.js"></script>
+  <script src="assets/site-cart.js"></script>
+  <script src="assets/data/catalog.js"></script>
+  <script src="assets/motion.js"></script>
+  <script src="assets/car-card.js"></script>
+  <script src="assets/car-sections.js"></script>
+  <script src="assets/sections.js"></script>
+  <script src="assets/pages.js"></script>
+</body>
+</html>

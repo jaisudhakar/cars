@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en" data-currency="USD">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Contact & test drives — Veloce</title>
+  <meta name="description" content="Book a test drive, ask about finance or visit the showroom.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Archivo:ital,wdth,wght@0,62..125,400..900;1,62..125,400..900&family=Inter:wght@400;500;600;700;800&family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet">
+  <script>document.documentElement.classList.add('motion-ready');</script>
+  <link rel="stylesheet" href="assets/base.css">
+  <link rel="stylesheet" href="assets/site.css">
+  <link rel="stylesheet" href="assets/motion.css">
+  <link rel="stylesheet" href="assets/sections.css">
+  <link rel="stylesheet" href="assets/car-sections.css">
+  <link rel="stylesheet" href="assets/pages.css">
+</head>
+<body class="sx">
+  <div data-site-header></div>
+  <script src="assets/brand.js"></script>
+  <script src="assets/site.js"></script>
+
+  <main id="main" data-page="contact">
+
+    <section class="page-hero">
+      <div class="container">
+        <ol class="crumbs" data-reveal><li><a href="index.html">Home</a></li><li aria-current="page">Contact</li></ol>
+        <h1 class="h1" data-split>Let's get you <em>driving.</em></h1>
+        <p class="lead" data-reveal style="--rd:.2s">Book a test drive, ask about finance or trade-ins, or just come and sit in a few cars. We'll reply within one working day.</p>
+      </div>
+    </section>
+
+    <section class="container" id="test-drive" style="padding-bottom:clamp(80px,9vw,140px)">
+      <div class="contact-grid">
+        <div data-reveal>
+          <form class="contact-form" data-contact-form novalidate>
+            <div class="field"><input id="cf-name" name="name" type="text" placeholder=" " autocomplete="name"><label for="cf-name">Your name</label><span class="field-err"></span></div>
+            <div class="field"><input id="cf-phone" name="phone" type="tel" placeholder=" " autocomplete="tel"><label for="cf-phone">Phone</label><span class="field-err"></span></div>
+            <div class="field full"><input id="cf-email" name="email" type="email" placeholder=" " autocomplete="email"><label for="cf-email">Email</label><span class="field-err"></span></div>
+            <div class="field field-select"><select id="cf-topic" name="topic"><option>Book a test drive</option><option>Finance &amp; leasing</option><option>Trade in my car</option><option>Service &amp; repairs</option><option>Something else</option></select><label for="cf-topic">I'd like to</label><span class="field-err"></span></div>
+            <div class="field field-select"><select id="cf-model" name="model"></select><label for="cf-model">Model</label><span class="field-err"></span></div>
+            <div class="field"><input id="cf-date" name="date" type="date" placeholder=" "><label for="cf-date">Preferred date</label><span class="field-err"></span></div>
+            <div class="field field-select"><select id="cf-where" name="where"><option>At the showroom</option><option>At my home</option><option>At my office</option></select><label for="cf-where">Where</label><span class="field-err"></span></div>
+            <div class="field full"><textarea id="cf-msg" name="message" placeholder=" "></textarea><label for="cf-msg">Anything else? (optional)</label><span class="field-err"></span></div>
+            <label class="check full"><input type="checkbox" name="news"> Send me launch events and finance offers</label>
+            <button type="submit" class="btn btn-dark full" data-magnetic="0.15"><span>Send request</span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></button>
+          </form>
+          <div class="contact-done" data-contact-done aria-live="polite">
+            <svg viewBox="0 0 72 72" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="36" cy="36" r="33"/><path d="M22 37l10 10 19-21"/></svg>
+            <h2>Thanks, <span data-done-name></span>!</h2>
+            <p>Your request is in. An advisor will call to confirm the time.</p>
+          </div>
+        </div>
+        <aside class="contact-side" id="visit" data-reveal-stagger>
+          <a class="info-card" href="#" data-reveal><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M5 4h4l2 5-2.5 1.5a11 11 0 0 0 5 5L15 13l5 2v4a2 2 0 0 1-2 2A16 16 0 0 1 3 6a2 2 0 0 1 2-2"/></svg><span><small>Sales</small><strong data-brand="phone"></strong></span></a>
+          <a class="info-card" href="#" data-reveal><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="m3 7 9 6 9-6"/></svg><span><small>Email</small><strong data-brand="email"></strong></span></a>
+          <div class="info-card" data-reveal><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M12 21s-7-6.2-7-12a7 7 0 0 1 14 0c0 5.8-7 12-7 12Z"/><circle cx="12" cy="9" r="2.5"/></svg><span><small>Showroom</small><strong data-brand="address"></strong><small style="margin-top:6px;text-transform:none;letter-spacing:0" data-brand="hours"></small></span></div>
+          <div class="map" data-reveal aria-hidden="true"><span class="map-pulse"></span><span class="map-pin"></span></div>
+        </aside>
+      </div>
+    </section>
+
+    <section class="section" id="faq" style="background:var(--mist)">
+      <div class="container faq-wrap">
+        <div>
+          <p class="eyebrow" data-reveal>FAQ</p>
+          <h2 class="h2" data-split style="margin-top:18px">Good <em>questions.</em></h2>
+          <p class="lead" data-reveal style="margin-top:18px">Can't find what you need? Use the form above and an advisor will help.</p>
+        </div>
+        <div class="acc" data-reveal-stagger>
+          <div class="acc-item is-open" data-reveal><button type="button" class="acc-btn" aria-expanded="true">How does reserving a car work?<span class="acc-icon" aria-hidden="true"></span></button><div class="acc-panel"><div><p>A refundable $500 deposit holds the car in the paint you chose for 14 days while we arrange finance, trade-in and delivery.</p></div></div></div>
+          <div class="acc-item" data-reveal><button type="button" class="acc-btn" aria-expanded="false">Why do some paints cost more?<span class="acc-icon" aria-hidden="true"></span></button><div class="acc-panel"><div><p>Metallic, pearl and matte finishes need extra coats and hand finishing. The price on every page updates as you pick a paint, so there are no surprises.</p></div></div></div>
+          <div class="acc-item" data-reveal><button type="button" class="acc-btn" aria-expanded="false">Can I trade in my current car?<span class="acc-icon" aria-hidden="true"></span></button><div class="acc-panel"><div><p>Yes. Choose "Trade in my car" above and we'll give you a valuation within 24 hours, which comes straight off the price.</p></div></div></div>
+          <div class="acc-item" data-reveal><button type="button" class="acc-btn" aria-expanded="false">What finance options do you offer?<span class="acc-icon" aria-hidden="true"></span></button><div class="acc-panel"><div><p>Hire purchase, personal contract purchase and leasing from 24 to 72 months. Try the <a href="index.html#finance">finance calculator</a> for an estimate.</p></div></div></div>
+          <div class="acc-item" data-reveal><button type="button" class="acc-btn" aria-expanded="false">What does the warranty cover?<span class="acc-icon" aria-hidden="true"></span></button><div class="acc-panel"><div><p>Eight years on the battery and powertrain, five years bumper-to-bumper and roadside assistance around the clock.</p></div></div></div>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <div data-site-footer></div>
+
+  <script src="assets/car-art.js"></script>
+  <script src="assets/site-cart.js"></script>
+  <script src="assets/data/catalog.js"></script>
+  <script src="assets/motion.js"></script>
+  <script src="assets/car-sections.js"></script>
+  <script src="assets/pages.js"></script>
+</body>
+</html>

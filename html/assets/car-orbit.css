@@ -1,0 +1,146 @@
+/* Showroom wheel (car-orbit.js) — adapted from Nike Orbit in shopify-theme-viral */
+.orbit {
+  --orbit-txt: #111;
+  --orbit-muted: #707072;
+  --orbit-line: #e5e5e5;
+  --orbit-accent: var(--accent, #ff4d1a);
+  position: relative; overflow: hidden;
+  height: var(--orbit-height, max(760px, 100vh)); max-height: 980px;
+  background: radial-gradient(120% 80% at 70% 60%, #ffffff 0%, #fbfaf8 60%, #f6f5f2 100%);
+  color: var(--orbit-txt);
+  font-family: var(--font-body-family, inherit);
+}
+.orbit-stage { position: absolute; inset: 0; touch-action: pan-y; cursor: grab; -webkit-user-select: none; user-select: none; }
+.orbit.orbit-dragging .orbit-stage { cursor: grabbing; }
+.orbit-ring {
+  position: absolute; border-radius: 50%; pointer-events: none;
+  border: 1px solid rgba(0, 0, 0, .07);
+  box-shadow: inset 0 0 120px rgba(0, 0, 0, .025);
+}
+
+.orbit-car {
+  position: absolute; left: 0; top: 0;
+  padding: 0; border: 0; background: none; cursor: pointer;
+  transform-origin: 50% 50%;
+  will-change: transform, opacity;
+  -webkit-tap-highlight-color: transparent;
+}
+.orbit-float { display: block; will-change: transform; }
+.orbit-car svg, .orbit-car img {
+  display: block; width: 100%; height: auto; overflow: visible; -webkit-user-drag: none; pointer-events: none;
+  transition: transform .5s cubic-bezier(.22, 1, .36, 1);
+}
+.orbit-car .car-paint { transition: fill .6s cubic-bezier(.22, 1, .36, 1); }
+.orbit-car.orbit-front:hover svg, .orbit-car.orbit-front:hover img { transform: translateY(-6px) scale(1.02); }
+.orbit-car:focus-visible { outline: 2px solid var(--orbit-txt); outline-offset: 6px; border-radius: 8px; }
+
+/* info panel */
+.orbit-info { position: absolute; left: 56px; top: 56px; z-index: 120; max-width: min(420px, 36vw); pointer-events: none; }
+.orbit-info > * { pointer-events: auto; }
+.orbit-idx { font-size: 11px; letter-spacing: 2px; color: var(--orbit-muted); font-variant-numeric: tabular-nums; }
+.orbit-name {
+  margin: 12px 0 0; font-family: var(--font-heading-family, inherit); font-stretch: var(--heading-stretch, 118%);
+  font-size: clamp(40px, 4.4vw, 64px); font-weight: 800; line-height: .95; letter-spacing: -.03em;
+  text-transform: uppercase;
+}
+.orbit-meta { margin: 12px 0 0; font-size: 13px; color: var(--orbit-muted); }
+.orbit-price {
+  display: inline-block; margin: 16px 0 0; padding-bottom: 3px; font-size: 24px; font-weight: 700; font-variant-numeric: tabular-nums;
+  background: linear-gradient(var(--orbit-paint, var(--orbit-accent)), var(--orbit-paint, var(--orbit-accent))) left bottom / 100% 3px no-repeat;
+}
+.orbit-price.orbit-bump { animation: orbitBump .5s cubic-bezier(.22, 1, .36, 1); }
+@keyframes orbitBump { 40% { transform: translateY(-3px) scale(1.04); } }
+.orbit-details {
+  display: flex; width: max-content; align-items: center; gap: 8px; margin-top: 16px; padding: 0 0 3px;
+  border-bottom: 1px solid currentColor; text-decoration: none;
+  font-size: 13px; font-weight: 600; color: inherit;
+}
+.orbit-details span { transition: transform .25s ease; }
+.orbit-details:hover span { transform: translateX(4px); }
+.orbit-info.orbit-swap .orbit-name,
+.orbit-info.orbit-swap .orbit-meta,
+.orbit-info.orbit-swap .orbit-idx { animation: orbitSwap .55s cubic-bezier(.22, 1, .36, 1) both; }
+.orbit-info.orbit-swap .orbit-meta { animation-delay: .05s; }
+@keyframes orbitSwap { from { opacity: 0; transform: translateY(14px); filter: blur(4px); } }
+
+/* wheel control */
+.orbit-wheel {
+  position: absolute; left: 50%; bottom: 46px; z-index: 120; transform: translateX(-50%);
+  width: min(280px, 70vw); padding-top: 12px;
+  cursor: ew-resize; touch-action: none; outline: none;
+  -webkit-user-select: none; user-select: none;
+}
+.orbit-wheel-dot { position: absolute; left: 50%; top: 0; width: 4px; height: 4px; margin-left: -2px; border-radius: 50%; background: var(--orbit-accent); }
+.orbit-wheel-track {
+  height: 22px; border-radius: 999px;
+  background-color: #2a2a2a;
+  background-image:
+    linear-gradient(to bottom, rgba(0, 0, 0, .55), rgba(255, 255, 255, .0) 30%, rgba(255, 255, 255, .0) 70%, rgba(0, 0, 0, .55)),
+    repeating-linear-gradient(to right, #d9d9d9 0 2px, #8b8b8b 2px 5px, #f4f4f4 5px 7px, #6a6a6a 7px 14px);
+  background-size: 100% 100%, 46px 100%;
+  box-shadow: 0 0 0 3px #fff, 0 0 0 4px #d8d8d8, inset 0 1px 2px rgba(0, 0, 0, .5);
+  -webkit-mask-image: linear-gradient(to right, rgba(0, 0, 0, .35), #000 14%, #000 86%, rgba(0, 0, 0, .35));
+  mask-image: linear-gradient(to right, rgba(0, 0, 0, .35), #000 14%, #000 86%, rgba(0, 0, 0, .35));
+}
+.orbit-wheel:focus-visible .orbit-wheel-track { box-shadow: 0 0 0 3px #fff, 0 0 0 5px var(--orbit-txt); }
+.orbit-wheel-labels {
+  display: flex; justify-content: space-between; margin-top: 10px;
+  font-size: 9px; letter-spacing: 2px; text-transform: uppercase; color: var(--orbit-muted);
+}
+
+/* paints + reserve */
+.orbit-paints-wrap { position: absolute; right: 56px; bottom: 46px; z-index: 120; width: min(340px, 40vw); }
+.orbit .orbit-paints-head { display: flex; justify-content: space-between; gap: 12px; margin-bottom: 10px; font-size: 12px; font-weight: 600; letter-spacing: .12em; text-transform: uppercase; color: var(--orbit-muted); }
+.orbit .orbit-paints-head span:last-child { color: var(--orbit-txt); letter-spacing: .02em; text-transform: none; font-size: 13px; }
+.orbit .orbit-paints { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 8px; }
+.orbit .orbit-paint {
+  position: relative; display: grid; justify-items: center; gap: 6px; padding: 10px 4px 8px;
+  background: #fff; border: 1px solid var(--orbit-line); border-radius: 6px; cursor: pointer;
+  font: inherit; font-size: 10.5px; font-weight: 500; line-height: 1.15; color: var(--orbit-txt); text-align: center;
+  transition: border-color .18s ease, transform .12s ease, box-shadow .25s ease;
+}
+.orbit .orbit-paint i {
+  width: 26px; height: 26px; border-radius: 50%; background: var(--c);
+  background-image: radial-gradient(circle at 32% 28%, rgba(255, 255, 255, .7), rgba(255, 255, 255, 0) 45%), linear-gradient(transparent 55%, rgba(0, 0, 0, .3));
+  box-shadow: inset 0 0 0 1px rgba(0, 0, 0, .14);
+}
+.orbit .orbit-paint span { display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+.orbit .orbit-paint:hover { border-color: var(--orbit-txt); }
+.orbit .orbit-paint:active { transform: scale(.95); }
+.orbit .orbit-paint[aria-checked="true"] { border-color: var(--orbit-txt); box-shadow: inset 0 0 0 1px var(--orbit-txt); }
+.orbit .orbit-paint.orbit-na { opacity: .45; }
+.orbit .orbit-reserve {
+  display: flex; align-items: center; justify-content: center; width: 100%; height: 46px; margin-top: 8px;
+  border: 0; border-radius: 6px; background: var(--orbit-txt); color: #fff; cursor: pointer;
+  font: inherit; font-size: 14px; font-weight: 600; transition: background .25s ease;
+}
+.orbit .orbit-reserve:hover { background: var(--orbit-accent); }
+.orbit .orbit-reserve:disabled { opacity: .4; cursor: not-allowed; }
+.orbit .orbit-reserve.orbit-busy { opacity: .7; pointer-events: none; }
+.orbit-msg { display: flex; align-items: center; gap: 6px; flex-wrap: wrap; min-height: 18px; margin: 12px 0 0; font-size: 11.5px; }
+.orbit-msg a { color: inherit; font-weight: 600; }
+.orbit-msg-ok { animation: orbitSwap .4s ease both; }
+.orbit-msg-err { color: #b3261e; }
+.orbit-check {
+  position: relative; flex: 0 0 auto; width: 14px; height: 14px; border-radius: 50%; background: var(--orbit-accent);
+}
+.orbit-check::after {
+  content: ''; position: absolute; left: 4.5px; top: 2.5px; width: 3px; height: 6px;
+  border: solid #fff; border-width: 0 1.6px 1.6px 0; transform: rotate(45deg);
+}
+
+/* entrance */
+.orbit-info, .orbit-wheel, .orbit-paints-wrap { opacity: 0; transition: opacity .8s ease .2s; }
+.orbit.orbit-in .orbit-info, .orbit.orbit-in .orbit-wheel, .orbit.orbit-in .orbit-paints-wrap { opacity: 1; }
+
+@media (max-width: 749.98px) {
+  .orbit { height: max(720px, 100svh); }
+  .orbit-info { left: 20px; right: 20px; top: 28px; max-width: none; }
+  .orbit-name { font-size: 40px; }
+  .orbit-wheel { bottom: 214px; }
+  .orbit-paints-wrap { left: 20px; right: 20px; bottom: 20px; width: auto; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .orbit-info.orbit-swap * { animation: none !important; }
+  .orbit-info, .orbit-wheel, .orbit-paints-wrap { transition: none; opacity: 1; }
+}

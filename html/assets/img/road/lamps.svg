@@ -1,0 +1,20 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 700 320" width="700" height="320">
+  <!-- one street lamp + a tree per tile; tiles repeat along the road -->
+  <g fill="#3a4048">
+    <rect x="348" y="60" width="6" height="260" rx="2"/>
+    <path d="M351 64 C351 40 372 30 400 30 L420 30 L420 36 L400 36 C378 36 357 44 357 64 Z"/>
+    <rect x="404" y="34" width="34" height="8" rx="4"/>
+  </g>
+  <rect x="408" y="41" width="26" height="3" rx="1.5" fill="#fff6d5"/>
+  <g>
+    <rect x="96" y="214" width="8" height="106" fill="#5a4636"/>
+    <circle cx="100" cy="196" r="44" fill="#5f7b5c"/>
+    <circle cx="72" cy="214" r="30" fill="#55704f"/>
+    <circle cx="130" cy="212" r="32" fill="#6a8766"/>
+    <circle cx="104" cy="170" r="28" fill="#6f8c6b"/>
+  </g>
+  <g fill="#6a8364">
+    <ellipse cx="560" cy="312" rx="60" ry="18"/>
+    <ellipse cx="610" cy="314" rx="40" ry="14"/>
+  </g>
+</svg>

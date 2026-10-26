@@ -1,0 +1,124 @@
+/* Car hero (car-hero.js) */
+.ch {
+  position: relative; overflow: hidden; isolation: isolate;
+  min-height: max(700px, calc(100vh - 96px)); min-height: max(700px, calc(100svh - 96px));
+  background:
+    radial-gradient(70% 55% at 70% 72%, color-mix(in srgb, var(--hero-paint, #1f55d6) 28%, transparent), transparent 70%),
+    radial-gradient(90% 70% at 20% 0%, #1b2130 0%, transparent 60%),
+    var(--night, #0a0c10);
+  color: #fff;
+  transition: background .8s ease;
+}
+.ch-word {
+  position: absolute; left: -2vw; bottom: 22%; z-index: -1; white-space: nowrap; pointer-events: none; user-select: none;
+  font-family: var(--font-heading-family); font-stretch: 125%; font-weight: 900; font-style: italic;
+  font-size: clamp(140px, 26vw, 460px); line-height: .8; letter-spacing: -.05em;
+  color: transparent; -webkit-text-stroke: 1px rgba(255, 255, 255, .07);
+  will-change: transform;
+}
+.ch-in {
+  position: relative; z-index: 2; width: 100%; max-width: var(--maxw, 1440px); margin: 0 auto;
+  padding: clamp(48px, 8vh, 96px) var(--gutter) 0;
+}
+.ch-copy { max-width: 720px; will-change: transform, opacity; }
+.ch .eyebrow { color: rgba(255, 255, 255, .7); }
+.ch-title { margin-top: 22px; font-size: clamp(52px, 7.6vw, 120px); }
+.ch-title em { color: var(--hero-paint, var(--accent)); transition: color .6s ease; }
+.ch .lead { color: rgba(255, 255, 255, .72); margin-top: 22px; }
+.ch-ctas { display: flex; flex-wrap: wrap; align-items: center; gap: 14px 26px; margin-top: 30px; }
+.ch .btn-light::before { background: var(--accent); }
+.ch .link-arrow { color: #fff; }
+
+/* the road strip + car */
+.ch-road { position: absolute; left: 0; right: 0; bottom: 0; z-index: 1; height: 52%; pointer-events: none; }
+.ch-floor {
+  position: absolute; left: 0; right: 0; bottom: 0; height: 30%;
+  background: linear-gradient(rgba(255, 255, 255, .04), rgba(255, 255, 255, 0)), #07080b;
+  border-top: 1px solid rgba(255, 255, 255, .1);
+}
+.ch-floor::before {
+  /* lane dashes rush past while the car moves */
+  content: ''; position: absolute; left: 0; right: 0; top: 14%; height: 3px;
+  background: repeating-linear-gradient(90deg, rgba(255, 255, 255, .55) 0 70px, transparent 70px 150px);
+  background-size: 150px 3px;
+  animation: chLane .5s linear infinite; animation-play-state: paused;
+}
+.ch-moving .ch-floor::before { animation-play-state: running; }
+@keyframes chLane { to { background-position: -150px 0; } }
+.ch-streaks { position: absolute; inset: 0 0 20%; pointer-events: none; opacity: 0; transition: opacity .5s ease; }
+.ch-moving .ch-streaks { opacity: 1; }
+.ch-streaks i {
+  position: absolute; left: 0; height: 2px; width: 30vw; border-radius: 2px;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, .6));
+  animation: chStreak .7s linear infinite;
+}
+.ch-streaks i:nth-child(1) { top: 30%; animation-delay: -.1s; }
+.ch-streaks i:nth-child(2) { top: 48%; width: 18vw; animation-delay: -.45s; }
+.ch-streaks i:nth-child(3) { top: 62%; animation-delay: -.3s; }
+.ch-streaks i:nth-child(4) { top: 72%; width: 40vw; animation-delay: -.6s; }
+@keyframes chStreak { from { transform: translateX(110vw); } to { transform: translateX(-50vw); } }
+
+.ch-car {
+  position: absolute; z-index: 3; right: 5vw; bottom: 25%; width: min(56vw, 900px);
+  will-change: transform;
+}
+.ch-car svg, .ch-car img { display: block; width: 100%; height: auto; overflow: visible; }
+.ch-car .car-paint { transition: fill .7s cubic-bezier(.22, 1, .36, 1); }
+.ch-car .car-head { filter: drop-shadow(0 0 10px #fff2b0); }
+.ch-car .car-tail { filter: drop-shadow(0 0 8px #ff2a2a); }
+.ch-car.is-shine svg { animation: rrFlash .7s ease; }
+@keyframes rrFlash { 30% { filter: brightness(1.45) saturate(1.25); } }
+.ch-parked .ch-car .car-body { animation: chIdle 2.4s ease-in-out infinite; }
+@keyframes chIdle { 50% { transform: translateY(1.4px); } }
+.ch-beam {
+  position: absolute; left: 92%; top: 46%; width: 60%; height: 52%; z-index: -1; pointer-events: none;
+  background: linear-gradient(90deg, rgba(255, 244, 200, .5), rgba(255, 244, 200, 0) 85%);
+  clip-path: polygon(0 42%, 100% 0, 100% 100%, 0 58%); filter: blur(8px);
+}
+.ch-reflect {
+  /* soft paint-coloured glow on the floor under the car */
+  position: absolute; z-index: 2; right: 6vw; bottom: 4%; width: min(54vw, 880px); height: 24%;
+  background: radial-gradient(50% 60% at 50% 20%, color-mix(in srgb, var(--hero-paint, #1f55d6) 45%, transparent), transparent 70%);
+  filter: blur(10px); opacity: .7; transition: background .6s ease;
+}
+
+/* paint picker + specs under the headline */
+.ch-bar {
+  position: absolute; left: 0; right: 0; bottom: 0; z-index: 4; width: 100%; max-width: var(--maxw, 1440px); margin: 0 auto;
+  display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 18px;
+  padding: 0 var(--gutter) 28px;
+}
+.ch-paints { display: flex; align-items: center; gap: 10px; font-size: 13px; color: rgba(255, 255, 255, .7); }
+.ch-paints button {
+  width: 26px; height: 26px; padding: 0; border: 0; border-radius: 50%; cursor: pointer; background: var(--c);
+  background-image: radial-gradient(circle at 32% 28%, rgba(255, 255, 255, .7), rgba(255, 255, 255, 0) 45%);
+  box-shadow: 0 0 0 1px rgba(255, 255, 255, .25); transition: box-shadow .3s ease, transform .2s ease;
+}
+.ch-paints button:hover { transform: scale(1.12); }
+.ch-paints button[aria-pressed="true"] { box-shadow: 0 0 0 2px #0a0c10, 0 0 0 4px #fff; }
+.ch-paints span { margin-left: 6px; min-width: 110px; color: #fff; font-weight: 600; }
+.ch-specs { display: flex; gap: clamp(18px, 3vw, 48px); margin: 0; }
+.ch-specs div { min-width: 0; }
+.ch-specs dt { font-size: 11px; font-weight: 600; letter-spacing: .14em; text-transform: uppercase; color: rgba(255, 255, 255, .55); }
+.ch-specs dd { margin: 4px 0 0; font-family: var(--font-heading-family); font-stretch: 118%; font-size: clamp(20px, 2vw, 30px); font-weight: 800; letter-spacing: -.02em; }
+.ch-scroll {
+  position: absolute; left: 50%; bottom: 22px; z-index: 5; transform: translateX(-50%);
+  display: flex; flex-direction: column; align-items: center; gap: 8px; color: rgba(255, 255, 255, .7);
+  font-size: 11px; letter-spacing: .2em; text-transform: uppercase; text-decoration: none;
+}
+.ch-scroll i { width: 1px; height: 40px; background: linear-gradient(#fff, transparent); animation: chDrop 1.8s ease-in-out infinite; transform-origin: top; }
+@keyframes chDrop { 0% { transform: scaleY(0); } 50% { transform: scaleY(1); } 100% { transform: scaleY(1); opacity: 0; } }
+
+@media (max-width: 899.98px) {
+  .ch { min-height: max(760px, calc(100svh - 96px)); }
+  .ch-road { height: 44%; }
+  .ch-floor { height: 40%; }
+  .ch-car { right: 2vw; width: 96vw; bottom: 36%; }
+  .ch-reflect { right: 4vw; width: 92vw; bottom: 22%; }
+  .ch-bar { flex-direction: column; align-items: flex-start; gap: 14px; padding-bottom: 20px; }
+  .ch-specs dd { font-size: 20px; }
+  .ch-scroll { display: none; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .ch-floor::before, .ch-streaks i, .ch-parked .ch-car .car-body { animation: none; }
+}
