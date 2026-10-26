@@ -131,8 +131,42 @@
   }
 
   /* ================= CONTACT ================= */
+  function builtBy(main) {
+    var d = B.developer, box = $('[data-built-by]', main);
+    if (!d || !box) return;
+    var ICON = {
+      mail: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="m3 7 9 6 9-6"/></svg>',
+      phone: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M5 4h4l2 5-2.5 1.5a11 11 0 0 0 5 5L15 13l5 2v4a2 2 0 0 1-2 2A16 16 0 0 1 3 6a2 2 0 0 1 2-2"/></svg>',
+      globe: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3c2.5 3 2.5 15 0 18M12 3c-2.5 3-2.5 15 0 18"/></svg>',
+      github: '<svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2a10 10 0 0 0-3.16 19.49c.5.09.68-.22.68-.48v-1.7c-2.78.6-3.37-1.34-3.37-1.34-.45-1.16-1.11-1.47-1.11-1.47-.9-.62.07-.6.07-.6 1 .07 1.53 1.03 1.53 1.03.9 1.52 2.34 1.08 2.91.83.09-.65.35-1.08.63-1.33-2.22-.25-4.55-1.11-4.55-4.94 0-1.09.39-1.98 1.03-2.68-.1-.25-.45-1.27.1-2.65 0 0 .84-.27 2.75 1.02a9.5 9.5 0 0 1 5 0c1.91-1.29 2.75-1.02 2.75-1.02.55 1.38.2 2.4.1 2.65.64.7 1.03 1.59 1.03 2.68 0 3.84-2.34 4.68-4.57 4.93.36.31.68.92.68 1.85v2.74c0 .27.18.58.69.48A10 10 0 0 0 12 2Z"/></svg>',
+      link: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M10 14a4 4 0 0 0 5.7 0l3-3a4 4 0 0 0-5.7-5.7l-1 1M14 10a4 4 0 0 0-5.7 0l-3 3a4 4 0 0 0 5.7 5.7l1-1"/></svg>'
+    };
+    var rows = [];
+    if (d.email) rows.push('<a class="bb-row" href="mailto:' + esc(d.email) + '">' + ICON.mail + '<span><small>Email</small>' + esc(d.email) + '</span></a>');
+    if (d.phone) rows.push('<a class="bb-row" href="tel:' + esc(String(d.phone).replace(/[^+\d]/g, '')) + '">' + ICON.phone + '<span><small>Phone</small>' + esc(d.phone) + '</span></a>');
+    box.innerHTML =
+      '<div class="bb-photo">' + (d.photo ? '<img src="' + esc(d.photo) + '" alt="' + esc(d.name) + '" loading="lazy">' : '') + '<span class="bb-ring" aria-hidden="true"></span></div>' +
+      '<div class="bb-body">' +
+      '  <p class="eyebrow">Website designed &amp; built by</p>' +
+      '  <h2 class="bb-name">' + esc(d.name) + '</h2>' +
+      '  <p class="bb-title">' + esc(d.title || '') + '</p>' +
+      (d.bio ? '  <p class="bb-bio">' + esc(d.bio) + '</p>' : '') +
+      '  <p class="bb-meta">' + [d.company, d.location].filter(Boolean).map(esc).join(' · ') + '</p>' +
+      '  <div class="bb-rows">' + rows.join('') + '</div>' +
+      '  <div class="bb-links">' + (d.links || []).map(function (l) {
+        return '<a class="bb-link" href="' + esc(l.href) + '" target="_blank" rel="noopener">' + (ICON[l.icon] || ICON.link) + esc(l.label) + '</a>';
+      }).join('') + '</div>' +
+      '</div>';
+  }
+
   function contact(main) {
     var c = B.contact || {};
+    builtBy(main);
+    // hide contact cards whose detail is not filled in yet (e.g. phone)
+    $$('[data-brand]', main).forEach(function (el) {
+      var k = el.getAttribute('data-brand'), card = el.closest('.info-card');
+      if (!c[k] && card && (k === 'phone' || k === 'email')) card.hidden = true;
+    });
     $$('[data-brand]', main).forEach(function (el) {
       var key = el.getAttribute('data-brand');
       if (c[key]) el.textContent = c[key];

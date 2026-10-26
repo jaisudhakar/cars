@@ -37,8 +37,8 @@ window.BRAND = {
 
   // contact details (placeholders — replace per client)
   contact: {
-    email: 'hello@lotcars.in',
-    phone: '+91 00000 00000',
+    email: 'jaisudhakar96@gmail.com',
+    phone: '',                             // e.g. '+91 98765 43210' — hidden on the site while empty
     address: 'Your store address, Your City',
     hours: 'Mon–Sat, 10:00–20:00'
   },
@@ -67,6 +67,22 @@ window.BRAND = {
       { label: 'Shipping & returns', href: 'contact.html#faq' }
     ] }
   ],
+
+  // "Built by" card on the contact page + credit in the footer
+  developer: {
+    name: 'Sudhakar',
+    title: 'Full-stack eCommerce developer · Shopify Partner',
+    bio: '8+ years building Shopify themes & apps, Magento 2, PHP and Node stores — and AI dev tools.',
+    company: 'Native Brand Technologies',
+    location: 'Coimbatore, India',
+    photo: 'assets/img/team/sudhakar.webp',
+    email: 'jaisudhakar96@gmail.com',
+    phone: '',                             // add your number here; it appears on the card and in the footer
+    links: [
+      { label: 'Portfolio', href: 'https://onemandeveloper.com', icon: 'globe' },
+      { label: 'GitHub', href: 'https://github.com/jaisudhakar', icon: 'github' }
+    ]
+  },
 
   newsletter: {
     title: 'Join the pit crew',

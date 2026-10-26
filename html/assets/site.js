@@ -120,13 +120,16 @@
         '    <div class="ft-social">' + (B.social || []).map(function (s) {
           return '<a href="' + esc(s.href) + '" aria-label="' + esc(s.label) + '">' + (ICON[s.icon] || esc(s.label)) + '</a>';
         }).join('') + '</div>' +
-        '    <div class="ft-contact"><a href="mailto:' + esc(c.email) + '">' + esc(c.email) + '</a><span>' + esc(c.phone) + '</span><span>' + esc(c.address) + '</span></div>' +
+        '    <div class="ft-contact"><a href="mailto:' + esc(c.email) + '">' + esc(c.email) + '</a>' +
+        (c.phone ? '<a href="tel:' + esc(String(c.phone).replace(/[^+\d]/g, '')) + '">' + esc(c.phone) + '</a>' : '') +
+        '<span>' + esc(c.address) + '</span></div>' +
         '  </div>' +
         '  <div class="ft-word" aria-hidden="true" data-ft-word>' + esc(B.name).split('').map(function (ch, i) {
           return '<span style="--ci:' + i + '">' + (ch === ' ' ? '&nbsp;' : ch) + '</span>';
         }).join('') + '</div>' +
         '  <div class="ft-base"><span>&copy; ' + year + ' ' + esc(B.name) + '. All rights reserved.</span>' +
-        '    <span class="ft-base-links"><a href="contact.html#faq">Finance &amp; warranty</a><a href="contact.html">Contact</a></span></div>' +
+        '    <span class="ft-base-links">' + (B.developer ? '<a href="' + esc((B.developer.links && B.developer.links[0] && B.developer.links[0].href) || 'contact.html#built-by') + '" target="_blank" rel="noopener">Website by ' + esc(B.developer.name) + '</a>' : '') +
+        '<a href="contact.html#faq">Shipping &amp; returns</a><a href="contact.html">Contact</a></span></div>' +
         '</footer>';
     }
 
