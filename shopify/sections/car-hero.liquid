@@ -43,7 +43,7 @@
     <div class="ch-streaks"><i></i><i></i><i></i><i></i></div>
     <div class="ch-floor"></div>
     <div class="ch-reflect"></div>
-    <div class="ch-car" data-hero-car data-style="{{ s.style }}" data-paint="{{ first_hex }}"{% if first_img != blank %} data-image="{{ first_img | image_url: width: 1400 }}"{% endif %}></div>
+    <div class="ch-car" data-hero-car{% if s.photo_style == 'cutout' %} data-cutout{% endif %} data-face="{{ s.face }}" data-style="{{ s.style }}" data-paint="{{ first_hex }}"{% if first_img != blank %} data-image="{{ first_img | image_url: width: 1400 }}"{% endif %}></div>
   </div>
   <div class="ch-bar">
     <div class="ch-paints" data-hero-paints role="group" aria-label="Paint the car">
@@ -88,6 +88,8 @@
       ]
     },
     { "type": "image_picker", "id": "image", "label": "Hero photo", "info": "Used when the first colour dot has no photo of its own." },
+    { "type": "select", "id": "photo_style", "label": "Hero photo", "default": "cutout", "options": [ { "value": "cutout", "label": "Cut-out (transparent background)" }, { "value": "card", "label": "Square photo with background" } ] },
+    { "type": "select", "id": "face", "label": "Car faces (in its photo)", "default": "right", "options": [ { "value": "right", "label": "Right — drives in from the left" }, { "value": "left", "label": "Left — drives in from the right" } ] },
     { "type": "color", "id": "accent", "label": "Button hover", "default": "#ff4d1a" }
   ],
   "blocks": [

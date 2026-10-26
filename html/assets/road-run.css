@@ -358,3 +358,11 @@
 .rr-paints.is-dots .rr-paint-txt { display: none; }
 .rr-paints.is-dots .rr-paint i { width: 30px; height: 30px; }
 @media (prefers-reduced-motion: reduce) { .rr-car--photo.is-parked .rr-car-in { animation: none; } }
+
+/* cut-out product photos (transparent, framed like the drawings) */
+.rr-car--cut img { position: relative; z-index: 1; filter: drop-shadow(0 22px 16px rgba(0, 0, 0, .6)) drop-shadow(0 0 40px color-mix(in srgb, var(--rr-paint, #ff4d1a) 30%, transparent)); }
+.rr-car--cut .rr-trail { top: 46%; bottom: 14%; }
+.rr-car--cut.is-parked .rr-car-in { animation: rrIdleCut 2.6s ease-in-out infinite; }
+@keyframes rrIdleCut { 50% { translate: 0 -3px; } }
+@media (prefers-reduced-motion: reduce) { .rr-car--cut.is-parked .rr-car-in { animation: none; } }
+.rr-car--cut { transform-origin: 50% 89%; }

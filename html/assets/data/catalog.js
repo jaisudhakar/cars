@@ -1,8 +1,11 @@
 /* Product catalog for the static site (home sections, shop, product pages, search).
- * Photos are in assets/img/products/ — one photo per colour.
+ * Cut-out photos (background removed, framed for the road) are in assets/img/cutouts/; the original
+ * scene photos are in assets/img/products/ and appear as "In the box" on the product page.
+ * cutout: true tells the animations these are transparent cars; face: 'left' makes the car drive in
+ * from the right (it faces left in the photo).
  *
  * Each product: id, name, category, price (base price), tagline, description, details (feature chips)
- * and paints (colours): { name, hex (swatch colour), extra (price on top of the base), image }.
+ * and paints (colours): { name, hex (swatch colour), extra (price on top of the base), image (cut-out), photo (original) }.
  * Prices are DEMO values — replace them with the client's real prices (or use the Shopify sections,
  * which read prices from the store).
  *
@@ -38,6 +41,8 @@ window.CATEGORIES = [
 window.CARS = [
   {
     "id": "ghost",
+    "cutout": true,
+    "face": "left",
     "name": "Ghost Drift",
     "tagline": "Ten liveries. One sideways attitude.",
     "category": "drift",
@@ -54,67 +59,79 @@ window.CARS = [
         "name": "Burnout Red",
         "hex": "#b3121c",
         "extra": 0,
-        "image": "assets/img/products/ghost-rc-drift-car-burnout-red.webp"
+        "image": "assets/img/cutouts/ghost-rc-drift-car-burnout-red.webp",
+        "photo": "assets/img/products/ghost-rc-drift-car-burnout-red.webp"
       },
       {
         "name": "Burnout Yellow",
         "hex": "#f2c21b",
         "extra": 0,
-        "image": "assets/img/products/ghost-rc-drift-car-burnout-yellow.webp"
+        "image": "assets/img/cutouts/ghost-rc-drift-car-burnout-yellow.webp",
+        "photo": "assets/img/products/ghost-rc-drift-car-burnout-yellow.webp"
       },
       {
         "name": "Rally Green",
         "hex": "#3fa34d",
         "extra": 0,
-        "image": "assets/img/products/ghost-rc-drift-car-rally-green.webp"
+        "image": "assets/img/cutouts/ghost-rc-drift-car-rally-green.webp",
+        "photo": "assets/img/products/ghost-rc-drift-car-rally-green.webp"
       },
       {
         "name": "Rally Purple",
         "hex": "#7b3fc4",
         "extra": 0,
-        "image": "assets/img/products/ghost-rc-drift-car-rally-purple.webp"
+        "image": "assets/img/cutouts/ghost-rc-drift-car-rally-purple.webp",
+        "photo": "assets/img/products/ghost-rc-drift-car-rally-purple.webp"
       },
       {
         "name": "Street Blue",
         "hex": "#1f5fd1",
         "extra": 0,
-        "image": "assets/img/products/ghost-rc-drift-car-street-blue.webp"
+        "image": "assets/img/cutouts/ghost-rc-drift-car-street-blue.webp",
+        "photo": "assets/img/products/ghost-rc-drift-car-street-blue.webp"
       },
       {
         "name": "Street Classic Red",
         "hex": "#c9302c",
         "extra": 0,
-        "image": "assets/img/products/ghost-rc-drift-car-street-classic-red.webp"
+        "image": "assets/img/cutouts/ghost-rc-drift-car-street-classic-red.webp",
+        "photo": "assets/img/products/ghost-rc-drift-car-street-classic-red.webp"
       },
       {
         "name": "Street Classic White",
         "hex": "#f0f0ee",
         "extra": 0,
-        "image": "assets/img/products/ghost-rc-drift-car-street-classic-white.webp"
+        "image": "assets/img/cutouts/ghost-rc-drift-car-street-classic-white.webp",
+        "photo": "assets/img/products/ghost-rc-drift-car-street-classic-white.webp"
       },
       {
         "name": "Street White",
         "hex": "#eef0f2",
         "extra": 0,
-        "image": "assets/img/products/ghost-rc-drift-car-street-white.webp"
+        "image": "assets/img/cutouts/ghost-rc-drift-car-street-white.webp",
+        "photo": "assets/img/products/ghost-rc-drift-car-street-white.webp"
       },
       {
         "name": "Underground Black",
         "hex": "#16181b",
         "extra": 0,
-        "image": "assets/img/products/ghost-rc-drift-car-underground-black.webp"
+        "image": "assets/img/cutouts/ghost-rc-drift-car-underground-black.webp",
+        "photo": "assets/img/products/ghost-rc-drift-car-underground-black.webp"
       },
       {
         "name": "Underground White",
         "hex": "#eceef0",
         "extra": 0,
-        "image": "assets/img/products/ghost-rc-drift-car-underground-white.webp"
+        "image": "assets/img/cutouts/ghost-rc-drift-car-underground-white.webp",
+        "photo": "assets/img/products/ghost-rc-drift-car-underground-white.webp"
       }
     ],
     "categoryLabel": "RC drift car"
   },
   {
     "id": "flare-1",
+    "cutout": true,
+    "face": "left",
     "name": "Flare 1 Drift",
     "tagline": "Retro street drifter.",
     "category": "drift",
@@ -131,43 +148,51 @@ window.CARS = [
         "name": "Street Red",
         "hex": "#c8202a",
         "extra": 0,
-        "image": "assets/img/products/flare-1-rc-drift-car-street-red.webp"
+        "image": "assets/img/cutouts/flare-1-rc-drift-car-street-red.webp",
+        "photo": "assets/img/products/flare-1-rc-drift-car-street-red.webp"
       },
       {
         "name": "Street White",
         "hex": "#eef0f2",
         "extra": 0,
-        "image": "assets/img/products/flare-1-rc-drift-car-street-white.webp"
+        "image": "assets/img/cutouts/flare-1-rc-drift-car-street-white.webp",
+        "photo": "assets/img/products/flare-1-rc-drift-car-street-white.webp"
       },
       {
         "name": "Track Pink",
         "hex": "#ef7e8f",
         "extra": 0,
-        "image": "assets/img/products/flare-1-rc-drift-car-track-pink.webp"
+        "image": "assets/img/cutouts/flare-1-rc-drift-car-track-pink.webp",
+        "photo": "assets/img/products/flare-1-rc-drift-car-track-pink.webp"
       },
       {
         "name": "Track White",
         "hex": "#f2f2f2",
         "extra": 0,
-        "image": "assets/img/products/flare-1-rc-drift-car-track-white.webp"
+        "image": "assets/img/cutouts/flare-1-rc-drift-car-track-white.webp",
+        "photo": "assets/img/products/flare-1-rc-drift-car-track-white.webp"
       },
       {
         "name": "Underground Blue",
         "hex": "#2a7fd6",
         "extra": 0,
-        "image": "assets/img/products/flare-1-rc-drift-car-underground-blue.webp"
+        "image": "assets/img/cutouts/flare-1-rc-drift-car-underground-blue.webp",
+        "photo": "assets/img/products/flare-1-rc-drift-car-underground-blue.webp"
       },
       {
         "name": "Underground Silver",
         "hex": "#b9bdc3",
         "extra": 0,
-        "image": "assets/img/products/flare-1-rc-drift-car-underground-silver.webp"
+        "image": "assets/img/cutouts/flare-1-rc-drift-car-underground-silver.webp",
+        "photo": "assets/img/products/flare-1-rc-drift-car-underground-silver.webp"
       }
     ],
     "categoryLabel": "RC drift car"
   },
   {
     "id": "flare-2",
+    "cutout": true,
+    "face": "left",
     "name": "Flare 2 Drift",
     "tagline": "Wide body. Big glow.",
     "category": "drift",
@@ -183,37 +208,44 @@ window.CARS = [
         "name": "Burnout Green",
         "hex": "#4f6b3f",
         "extra": 0,
-        "image": "assets/img/products/flare-2-rc-drift-car-burnout-green.webp"
+        "image": "assets/img/cutouts/flare-2-rc-drift-car-burnout-green.webp",
+        "photo": "assets/img/products/flare-2-rc-drift-car-burnout-green.webp"
       },
       {
         "name": "Burnout Grey",
         "hex": "#7a7f86",
         "extra": 0,
-        "image": "assets/img/products/flare-2-rc-drift-car-burnout-grey.webp"
+        "image": "assets/img/cutouts/flare-2-rc-drift-car-burnout-grey.webp",
+        "photo": "assets/img/products/flare-2-rc-drift-car-burnout-grey.webp"
       },
       {
         "name": "Burnout Red",
         "hex": "#b3121c",
         "extra": 0,
-        "image": "assets/img/products/flare-2-rc-drift-car-burnout-red.webp"
+        "image": "assets/img/cutouts/flare-2-rc-drift-car-burnout-red.webp",
+        "photo": "assets/img/products/flare-2-rc-drift-car-burnout-red.webp"
       },
       {
         "name": "Race Black",
         "hex": "#1a1b1e",
         "extra": 0,
-        "image": "assets/img/products/flare-2-rc-drift-car-race-black.webp"
+        "image": "assets/img/cutouts/flare-2-rc-drift-car-race-black.webp",
+        "photo": "assets/img/products/flare-2-rc-drift-car-race-black.webp"
       },
       {
         "name": "Race Grey",
         "hex": "#8a8f96",
         "extra": 0,
-        "image": "assets/img/products/flare-2-rc-drift-car-race-grey.webp"
+        "image": "assets/img/cutouts/flare-2-rc-drift-car-race-grey.webp",
+        "photo": "assets/img/products/flare-2-rc-drift-car-race-grey.webp"
       }
     ],
     "categoryLabel": "RC drift car"
   },
   {
     "id": "shadow",
+    "cutout": true,
+    "face": "right",
     "name": "Shadow Drift",
     "tagline": "Muscle-car drifts.",
     "category": "drift",
@@ -229,43 +261,51 @@ window.CARS = [
         "name": "Asphalt Black",
         "hex": "#16181b",
         "extra": 0,
-        "image": "assets/img/products/shadow-rc-drift-car-asphalt-black.webp"
+        "image": "assets/img/cutouts/shadow-rc-drift-car-asphalt-black.webp",
+        "photo": "assets/img/products/shadow-rc-drift-car-asphalt-black.webp"
       },
       {
         "name": "Asphalt Green",
         "hex": "#b6e01f",
         "extra": 0,
-        "image": "assets/img/products/shadow-rc-drift-car-asphalt-green.webp"
+        "image": "assets/img/cutouts/shadow-rc-drift-car-asphalt-green.webp",
+        "photo": "assets/img/products/shadow-rc-drift-car-asphalt-green.webp"
       },
       {
         "name": "Asphalt Silver",
         "hex": "#c3c7cc",
         "extra": 0,
-        "image": "assets/img/products/shadow-rc-drift-car-asphalt-silver.webp"
+        "image": "assets/img/cutouts/shadow-rc-drift-car-asphalt-silver.webp",
+        "photo": "assets/img/products/shadow-rc-drift-car-asphalt-silver.webp"
       },
       {
         "name": "Tarmac Black",
         "hex": "#16181b",
         "extra": 0,
-        "image": "assets/img/products/shadow-rc-drift-car-tarmac-black.webp"
+        "image": "assets/img/cutouts/shadow-rc-drift-car-tarmac-black.webp",
+        "photo": "assets/img/products/shadow-rc-drift-car-tarmac-black.webp"
       },
       {
         "name": "Tarmac Purple",
         "hex": "#7a4fc0",
         "extra": 0,
-        "image": "assets/img/products/shadow-rc-drift-car-tarmac-purple.webp"
+        "image": "assets/img/cutouts/shadow-rc-drift-car-tarmac-purple.webp",
+        "photo": "assets/img/products/shadow-rc-drift-car-tarmac-purple.webp"
       },
       {
         "name": "Tarmac Red",
         "hex": "#d03a2a",
         "extra": 0,
-        "image": "assets/img/products/shadow-rc-drift-car-tarmac-red.webp"
+        "image": "assets/img/cutouts/shadow-rc-drift-car-tarmac-red.webp",
+        "photo": "assets/img/products/shadow-rc-drift-car-tarmac-red.webp"
       }
     ],
     "categoryLabel": "RC drift car"
   },
   {
     "id": "night-wolf",
+    "cutout": true,
+    "face": "right",
     "name": "Night Wolf Drift",
     "tagline": "Art-car liveries after dark.",
     "category": "drift",
@@ -281,25 +321,30 @@ window.CARS = [
         "name": "Hammer Green",
         "hex": "#3c8d3a",
         "extra": 0,
-        "image": "assets/img/products/night-wolf-rc-drift-car-hammer-green.webp"
+        "image": "assets/img/cutouts/night-wolf-rc-drift-car-hammer-green.webp",
+        "photo": "assets/img/products/night-wolf-rc-drift-car-hammer-green.webp"
       },
       {
         "name": "Hammer Red",
         "hex": "#d7262b",
         "extra": 0,
-        "image": "assets/img/products/night-wolf-rc-drift-car-hammer-red.webp"
+        "image": "assets/img/cutouts/night-wolf-rc-drift-car-hammer-red.webp",
+        "photo": "assets/img/products/night-wolf-rc-drift-car-hammer-red.webp"
       },
       {
         "name": "Underground Blue",
         "hex": "#2a7fd6",
         "extra": 0,
-        "image": "assets/img/products/night-wolf-rc-drift-car-underground-blue.webp"
+        "image": "assets/img/cutouts/night-wolf-rc-drift-car-underground-blue.webp",
+        "photo": "assets/img/products/night-wolf-rc-drift-car-underground-blue.webp"
       }
     ],
     "categoryLabel": "RC drift car"
   },
   {
     "id": "vortex",
+    "cutout": true,
+    "face": "right",
     "name": "Vortex Overdrive",
     "tagline": "Pop-up lights, pure 90s.",
     "category": "drift",
@@ -315,19 +360,23 @@ window.CARS = [
         "name": "Grey",
         "hex": "#8d9399",
         "extra": 0,
-        "image": "assets/img/products/vortex-overdrive-grey.webp"
+        "image": "assets/img/cutouts/vortex-overdrive-grey.webp",
+        "photo": "assets/img/products/vortex-overdrive-grey.webp"
       },
       {
         "name": "Yellow",
         "hex": "#f2c21b",
         "extra": 0,
-        "image": "assets/img/products/vortex-overdrive-yellow.webp"
+        "image": "assets/img/cutouts/vortex-overdrive-yellow.webp",
+        "photo": "assets/img/products/vortex-overdrive-yellow.webp"
       }
     ],
     "categoryLabel": "RC drift car"
   },
   {
     "id": "flare-legends",
+    "cutout": true,
+    "face": "right",
     "name": "Flare Legends Edition",
     "tagline": "Built-in gyro for clean slides.",
     "category": "drift",
@@ -344,13 +393,16 @@ window.CARS = [
         "name": "Standard",
         "hex": "#888c92",
         "extra": 0,
-        "image": "assets/img/products/flare-legends-edition-rc-drift-car-with-gyroscope-default-title.webp"
+        "image": "assets/img/cutouts/flare-legends-edition-rc-drift-car-with-gyroscope-default-title.webp",
+        "photo": "assets/img/products/flare-legends-edition-rc-drift-car-with-gyroscope-default-title.webp"
       }
     ],
     "categoryLabel": "RC drift car"
   },
   {
     "id": "bhoot",
+    "cutout": true,
+    "face": "right",
     "name": "Bhoot",
     "tagline": "Smoke, glow and a ghost of a slide.",
     "category": "drift",
@@ -367,31 +419,37 @@ window.CARS = [
         "name": "Underground Black",
         "hex": "#16181b",
         "extra": 0,
-        "image": "assets/img/products/l-o-t-cars-bhoot-underground-black.webp"
+        "image": "assets/img/cutouts/l-o-t-cars-bhoot-underground-black.webp",
+        "photo": "assets/img/products/l-o-t-cars-bhoot-underground-black.webp"
       },
       {
         "name": "Underground Blue",
         "hex": "#2a7fd6",
         "extra": 0,
-        "image": "assets/img/products/l-o-t-cars-bhoot-underground-blue.webp"
+        "image": "assets/img/cutouts/l-o-t-cars-bhoot-underground-blue.webp",
+        "photo": "assets/img/products/l-o-t-cars-bhoot-underground-blue.webp"
       },
       {
         "name": "Underground Green",
         "hex": "#14a37f",
         "extra": 0,
-        "image": "assets/img/products/l-o-t-cars-bhoot-underground-green.webp"
+        "image": "assets/img/cutouts/l-o-t-cars-bhoot-underground-green.webp",
+        "photo": "assets/img/products/l-o-t-cars-bhoot-underground-green.webp"
       },
       {
         "name": "Underground Grey",
         "hex": "#9aa0a6",
         "extra": 0,
-        "image": "assets/img/products/l-o-t-cars-bhoot-underground-grey.webp"
+        "image": "assets/img/cutouts/l-o-t-cars-bhoot-underground-grey.webp",
+        "photo": "assets/img/products/l-o-t-cars-bhoot-underground-grey.webp"
       }
     ],
     "categoryLabel": "RC drift car"
   },
   {
     "id": "blitz",
+    "cutout": true,
+    "face": "right",
     "name": "Blitz",
     "tagline": "Rally colours, drift soul.",
     "category": "drift",
@@ -408,13 +466,16 @@ window.CARS = [
         "name": "Standard",
         "hex": "#888c92",
         "extra": 0,
-        "image": "assets/img/products/l-o-t-cars-blitz-default-title.webp"
+        "image": "assets/img/cutouts/l-o-t-cars-blitz-default-title.webp",
+        "photo": "assets/img/products/l-o-t-cars-blitz-default-title.webp"
       }
     ],
     "categoryLabel": "RC drift car"
   },
   {
     "id": "zip",
+    "cutout": true,
+    "face": "right",
     "name": "Zip",
     "tagline": "Classic hatch, pocket size.",
     "category": "mini",
@@ -431,31 +492,37 @@ window.CARS = [
         "name": "Black",
         "hex": "#15171a",
         "extra": 0,
-        "image": "assets/img/products/l-o-t-cars-zip-black.webp"
+        "image": "assets/img/cutouts/l-o-t-cars-zip-black.webp",
+        "photo": "assets/img/products/l-o-t-cars-zip-black.webp"
       },
       {
         "name": "Green",
         "hex": "#2f8f4e",
         "extra": 0,
-        "image": "assets/img/products/l-o-t-cars-zip-green.webp"
+        "image": "assets/img/cutouts/l-o-t-cars-zip-green.webp",
+        "photo": "assets/img/products/l-o-t-cars-zip-green.webp"
       },
       {
         "name": "Grey",
         "hex": "#8d9399",
         "extra": 0,
-        "image": "assets/img/products/l-o-t-cars-zip-grey.webp"
+        "image": "assets/img/cutouts/l-o-t-cars-zip-grey.webp",
+        "photo": "assets/img/products/l-o-t-cars-zip-grey.webp"
       },
       {
         "name": "Purple",
         "hex": "#5a3fb0",
         "extra": 0,
-        "image": "assets/img/products/l-o-t-cars-zip-purple.webp"
+        "image": "assets/img/cutouts/l-o-t-cars-zip-purple.webp",
+        "photo": "assets/img/products/l-o-t-cars-zip-purple.webp"
       }
     ],
     "categoryLabel": "Mini RC car"
   },
   {
     "id": "dash-mini",
+    "cutout": true,
+    "face": "right",
     "name": "Dash Mini",
     "tagline": "Desk-sized racer.",
     "category": "mini",
@@ -471,31 +538,37 @@ window.CARS = [
         "name": "Black",
         "hex": "#15171a",
         "extra": 0,
-        "image": "assets/img/products/dash-mini-rc-car-black.webp"
+        "image": "assets/img/cutouts/dash-mini-rc-car-black.webp",
+        "photo": "assets/img/products/dash-mini-rc-car-black.webp"
       },
       {
         "name": "Green",
         "hex": "#2f8f4e",
         "extra": 0,
-        "image": "assets/img/products/dash-mini-rc-car-green.webp"
+        "image": "assets/img/cutouts/dash-mini-rc-car-green.webp",
+        "photo": "assets/img/products/dash-mini-rc-car-green.webp"
       },
       {
         "name": "Silver",
         "hex": "#c3c7cc",
         "extra": 0,
-        "image": "assets/img/products/dash-mini-rc-car-silver.webp"
+        "image": "assets/img/cutouts/dash-mini-rc-car-silver.webp",
+        "photo": "assets/img/products/dash-mini-rc-car-silver.webp"
       },
       {
         "name": "Street White",
         "hex": "#eef0f2",
         "extra": 0,
-        "image": "assets/img/products/dash-mini-rc-car-street-white.webp"
+        "image": "assets/img/cutouts/dash-mini-rc-car-street-white.webp",
+        "photo": "assets/img/products/dash-mini-rc-car-street-white.webp"
       }
     ],
     "categoryLabel": "Mini RC car"
   },
   {
     "id": "nitro-mini",
+    "cutout": true,
+    "face": "right",
     "name": "Nitro Mini",
     "tagline": "Mini muscle with lights.",
     "category": "mini",
@@ -511,37 +584,44 @@ window.CARS = [
         "name": "Race Blue",
         "hex": "#2a5fd0",
         "extra": 0,
-        "image": "assets/img/products/nitro-mini-rc-car-race-blue.webp"
+        "image": "assets/img/cutouts/nitro-mini-rc-car-race-blue.webp",
+        "photo": "assets/img/products/nitro-mini-rc-car-race-blue.webp"
       },
       {
         "name": "Race Grey",
         "hex": "#8a8f96",
         "extra": 0,
-        "image": "assets/img/products/nitro-mini-rc-car-race-grey.webp"
+        "image": "assets/img/cutouts/nitro-mini-rc-car-race-grey.webp",
+        "photo": "assets/img/products/nitro-mini-rc-car-race-grey.webp"
       },
       {
         "name": "Tarmac Black",
         "hex": "#16181b",
         "extra": 0,
-        "image": "assets/img/products/nitro-mini-rc-car-tarmac-black.webp"
+        "image": "assets/img/cutouts/nitro-mini-rc-car-tarmac-black.webp",
+        "photo": "assets/img/products/nitro-mini-rc-car-tarmac-black.webp"
       },
       {
         "name": "Tarmac Green",
         "hex": "#5f7d4f",
         "extra": 0,
-        "image": "assets/img/products/nitro-mini-rc-car-tarmac-green.webp"
+        "image": "assets/img/cutouts/nitro-mini-rc-car-tarmac-green.webp",
+        "photo": "assets/img/products/nitro-mini-rc-car-tarmac-green.webp"
       },
       {
         "name": "Tarmac Grey",
         "hex": "#8a8f96",
         "extra": 0,
-        "image": "assets/img/products/nitro-mini-rc-car-tarmac-grey.webp"
+        "image": "assets/img/cutouts/nitro-mini-rc-car-tarmac-grey.webp",
+        "photo": "assets/img/products/nitro-mini-rc-car-tarmac-grey.webp"
       }
     ],
     "categoryLabel": "Mini RC car"
   },
   {
     "id": "gator-hammer",
+    "cutout": true,
+    "face": "right",
     "name": "Gator Hammer",
     "tagline": "Big tyres. No roads needed.",
     "category": "offroad",
@@ -558,31 +638,37 @@ window.CARS = [
         "name": "Black",
         "hex": "#15171a",
         "extra": 0,
-        "image": "assets/img/products/l-o-t-cars-gator-hammer-black.webp"
+        "image": "assets/img/cutouts/l-o-t-cars-gator-hammer-black.webp",
+        "photo": "assets/img/products/l-o-t-cars-gator-hammer-black.webp"
       },
       {
         "name": "Green",
         "hex": "#2f8f4e",
         "extra": 0,
-        "image": "assets/img/products/l-o-t-cars-gator-hammer-green.webp"
+        "image": "assets/img/cutouts/l-o-t-cars-gator-hammer-green.webp",
+        "photo": "assets/img/products/l-o-t-cars-gator-hammer-green.webp"
       },
       {
         "name": "Orange",
         "hex": "#f06a1d",
         "extra": 0,
-        "image": "assets/img/products/l-o-t-cars-gator-hammer-orange.webp"
+        "image": "assets/img/cutouts/l-o-t-cars-gator-hammer-orange.webp",
+        "photo": "assets/img/products/l-o-t-cars-gator-hammer-orange.webp"
       },
       {
         "name": "Red",
         "hex": "#c8202a",
         "extra": 0,
-        "image": "assets/img/products/l-o-t-cars-gator-hammer-red.webp"
+        "image": "assets/img/cutouts/l-o-t-cars-gator-hammer-red.webp",
+        "photo": "assets/img/products/l-o-t-cars-gator-hammer-red.webp"
       }
     ],
     "categoryLabel": "Off-road RC"
   },
   {
     "id": "gator-marsh",
+    "cutout": true,
+    "face": "right",
     "name": "Gator Marsh",
     "tagline": "Pickup grip for any terrain.",
     "category": "offroad",
@@ -599,31 +685,37 @@ window.CARS = [
         "name": "Black",
         "hex": "#15171a",
         "extra": 0,
-        "image": "assets/img/products/l-o-t-cars-gator-marsh-black.webp"
+        "image": "assets/img/cutouts/l-o-t-cars-gator-marsh-black.webp",
+        "photo": "assets/img/products/l-o-t-cars-gator-marsh-black.webp"
       },
       {
         "name": "Green",
         "hex": "#2f8f4e",
         "extra": 0,
-        "image": "assets/img/products/l-o-t-cars-gator-marsh-green.webp"
+        "image": "assets/img/cutouts/l-o-t-cars-gator-marsh-green.webp",
+        "photo": "assets/img/products/l-o-t-cars-gator-marsh-green.webp"
       },
       {
         "name": "Orange",
         "hex": "#f06a1d",
         "extra": 0,
-        "image": "assets/img/products/l-o-t-cars-gator-marsh-orange.webp"
+        "image": "assets/img/cutouts/l-o-t-cars-gator-marsh-orange.webp",
+        "photo": "assets/img/products/l-o-t-cars-gator-marsh-orange.webp"
       },
       {
         "name": "Red",
         "hex": "#c8202a",
         "extra": 0,
-        "image": "assets/img/products/l-o-t-cars-gator-marsh-red.webp"
+        "image": "assets/img/cutouts/l-o-t-cars-gator-marsh-red.webp",
+        "photo": "assets/img/products/l-o-t-cars-gator-marsh-red.webp"
       }
     ],
     "categoryLabel": "Off-road RC"
   },
   {
     "id": "roxie",
+    "cutout": true,
+    "face": "right",
     "name": "Roxie",
     "tagline": "Crawl over anything.",
     "category": "offroad",
@@ -640,31 +732,37 @@ window.CARS = [
         "name": "Explorer Aqua",
         "hex": "#1fb5b0",
         "extra": 0,
-        "image": "assets/img/products/l-o-t-cars-roxie-explorer-aqua.webp"
+        "image": "assets/img/cutouts/l-o-t-cars-roxie-explorer-aqua.webp",
+        "photo": "assets/img/products/l-o-t-cars-roxie-explorer-aqua.webp"
       },
       {
         "name": "Explorer Yellow",
         "hex": "#f2c21b",
         "extra": 0,
-        "image": "assets/img/products/l-o-t-cars-roxie-explorer-yellow.webp"
+        "image": "assets/img/cutouts/l-o-t-cars-roxie-explorer-yellow.webp",
+        "photo": "assets/img/products/l-o-t-cars-roxie-explorer-yellow.webp"
       },
       {
         "name": "Navigate Blue",
         "hex": "#1e56c8",
         "extra": 0,
-        "image": "assets/img/products/l-o-t-cars-roxie-navigate-blue.webp"
+        "image": "assets/img/cutouts/l-o-t-cars-roxie-navigate-blue.webp",
+        "photo": "assets/img/products/l-o-t-cars-roxie-navigate-blue.webp"
       },
       {
         "name": "Navigate Red",
         "hex": "#c7262b",
         "extra": 0,
-        "image": "assets/img/products/l-o-t-cars-roxie-navigate-red.webp"
+        "image": "assets/img/cutouts/l-o-t-cars-roxie-navigate-red.webp",
+        "photo": "assets/img/products/l-o-t-cars-roxie-navigate-red.webp"
       }
     ],
     "categoryLabel": "Off-road RC"
   },
   {
     "id": "knox",
+    "cutout": true,
+    "face": "left",
     "name": "Knox Off-Road Truck",
     "tagline": "Desert-ready monster truck.",
     "category": "offroad",
@@ -680,37 +778,44 @@ window.CARS = [
         "name": "Adventure Black",
         "hex": "#1b1c1e",
         "extra": 0,
-        "image": "assets/img/products/knox-off-road-rc-truck-adventure-black.webp"
+        "image": "assets/img/cutouts/knox-off-road-rc-truck-adventure-black.webp",
+        "photo": "assets/img/products/knox-off-road-rc-truck-adventure-black.webp"
       },
       {
         "name": "Adventure Green",
         "hex": "#4f9a3a",
         "extra": 0,
-        "image": "assets/img/products/knox-off-road-rc-truck-adventure-green.webp"
+        "image": "assets/img/cutouts/knox-off-road-rc-truck-adventure-green.webp",
+        "photo": "assets/img/products/knox-off-road-rc-truck-adventure-green.webp"
       },
       {
         "name": "Adventure Red",
         "hex": "#d22a22",
         "extra": 0,
-        "image": "assets/img/products/knox-off-road-rc-truck-adventure-red.webp"
+        "image": "assets/img/cutouts/knox-off-road-rc-truck-adventure-red.webp",
+        "photo": "assets/img/products/knox-off-road-rc-truck-adventure-red.webp"
       },
       {
         "name": "Explorer Black",
         "hex": "#202124",
         "extra": 0,
-        "image": "assets/img/products/knox-off-road-rc-truck-explorer-black.webp"
+        "image": "assets/img/cutouts/knox-off-road-rc-truck-explorer-black.webp",
+        "photo": "assets/img/products/knox-off-road-rc-truck-explorer-black.webp"
       },
       {
         "name": "Explorer Blue",
         "hex": "#2257c9",
         "extra": 0,
-        "image": "assets/img/products/knox-off-road-rc-truck-explorer-blue.webp"
+        "image": "assets/img/cutouts/knox-off-road-rc-truck-explorer-blue.webp",
+        "photo": "assets/img/products/knox-off-road-rc-truck-explorer-blue.webp"
       }
     ],
     "categoryLabel": "Off-road RC"
   },
   {
     "id": "bumble",
+    "cutout": true,
+    "face": "right",
     "name": "Bumble Off-Road",
     "tagline": "First off-roader for kids.",
     "category": "offroad",
@@ -726,31 +831,37 @@ window.CARS = [
         "name": "Forest Green",
         "hex": "#2e7d32",
         "extra": 0,
-        "image": "assets/img/products/bumble-off-road-rc-car-forest-green.webp"
+        "image": "assets/img/cutouts/bumble-off-road-rc-car-forest-green.webp",
+        "photo": "assets/img/products/bumble-off-road-rc-car-forest-green.webp"
       },
       {
         "name": "Hunter Green",
         "hex": "#355e3b",
         "extra": 0,
-        "image": "assets/img/products/bumble-off-road-rc-car-hunter-green.webp"
+        "image": "assets/img/cutouts/bumble-off-road-rc-car-hunter-green.webp",
+        "photo": "assets/img/products/bumble-off-road-rc-car-hunter-green.webp"
       },
       {
         "name": "Ocean Blue",
         "hex": "#1f6fd1",
         "extra": 0,
-        "image": "assets/img/products/bumble-off-road-rc-car-ocean-blue.webp"
+        "image": "assets/img/cutouts/bumble-off-road-rc-car-ocean-blue.webp",
+        "photo": "assets/img/products/bumble-off-road-rc-car-ocean-blue.webp"
       },
       {
         "name": "SUV Purple",
         "hex": "#5b4bb7",
         "extra": 0,
-        "image": "assets/img/products/bumble-off-road-rc-car-suv-purple.webp"
+        "image": "assets/img/cutouts/bumble-off-road-rc-car-suv-purple.webp",
+        "photo": "assets/img/products/bumble-off-road-rc-car-suv-purple.webp"
       }
     ],
     "categoryLabel": "Off-road RC"
   },
   {
     "id": "apex",
+    "cutout": true,
+    "face": "right",
     "name": "Apex 4x4",
     "tagline": "4x4 basher with neon style.",
     "category": "offroad",
@@ -766,13 +877,16 @@ window.CARS = [
         "name": "Standard",
         "hex": "#888c92",
         "extra": 0,
-        "image": "assets/img/products/apex-4x4-rc-car-default-title.webp"
+        "image": "assets/img/cutouts/apex-4x4-rc-car-default-title.webp",
+        "photo": "assets/img/products/apex-4x4-rc-car-default-title.webp"
       }
     ],
     "categoryLabel": "Off-road RC"
   },
   {
     "id": "doughty",
+    "cutout": true,
+    "face": "right",
     "name": "Doughty 4x4",
     "tagline": "Bold graphics, big tyres.",
     "category": "offroad",
@@ -788,13 +902,16 @@ window.CARS = [
         "name": "Standard",
         "hex": "#888c92",
         "extra": 0,
-        "image": "assets/img/products/doughty-4x4-rc-car-default-title.webp"
+        "image": "assets/img/cutouts/doughty-4x4-rc-car-default-title.webp",
+        "photo": "assets/img/products/doughty-4x4-rc-car-default-title.webp"
       }
     ],
     "categoryLabel": "Off-road RC"
   },
   {
     "id": "gazer",
+    "cutout": true,
+    "face": "right",
     "name": "Gazer 4x4",
     "tagline": "Neon-graphics 4x4.",
     "category": "offroad",
@@ -810,13 +927,16 @@ window.CARS = [
         "name": "Standard",
         "hex": "#888c92",
         "extra": 0,
-        "image": "assets/img/products/gazer-4x4-rc-car-default-title.webp"
+        "image": "assets/img/cutouts/gazer-4x4-rc-car-default-title.webp",
+        "photo": "assets/img/products/gazer-4x4-rc-car-default-title.webp"
       }
     ],
     "categoryLabel": "Off-road RC"
   },
   {
     "id": "fang",
+    "cutout": true,
+    "face": "right",
     "name": "Fang Excavator",
     "tagline": "Dig, swing, repeat.",
     "category": "construction",
@@ -832,13 +952,16 @@ window.CARS = [
         "name": "Standard",
         "hex": "#888c92",
         "extra": 0,
-        "image": "assets/img/products/fang-rc-excavator-default-title.webp"
+        "image": "assets/img/cutouts/fang-rc-excavator-default-title.webp",
+        "photo": "assets/img/products/fang-rc-excavator-default-title.webp"
       }
     ],
     "categoryLabel": "RC construction"
   },
   {
     "id": "rift",
+    "cutout": true,
+    "face": "right",
     "name": "Rift Excavator",
     "tagline": "Heavy-duty digger.",
     "category": "construction",
@@ -854,13 +977,16 @@ window.CARS = [
         "name": "Standard",
         "hex": "#888c92",
         "extra": 0,
-        "image": "assets/img/products/rift-default-title.webp"
+        "image": "assets/img/cutouts/rift-default-title.webp",
+        "photo": "assets/img/products/rift-default-title.webp"
       }
     ],
     "categoryLabel": "RC construction"
   },
   {
     "id": "rumble",
+    "cutout": true,
+    "face": "right",
     "name": "Rumble Dump Truck",
     "tagline": "Load it, tip it.",
     "category": "construction",
@@ -876,13 +1002,16 @@ window.CARS = [
         "name": "Standard",
         "hex": "#888c92",
         "extra": 0,
-        "image": "assets/img/products/rumble-default-title.webp"
+        "image": "assets/img/cutouts/rumble-default-title.webp",
+        "photo": "assets/img/products/rumble-default-title.webp"
       }
     ],
     "categoryLabel": "RC construction"
   },
   {
     "id": "mac",
+    "cutout": true,
+    "face": "left",
     "name": "Mac Truck",
     "tagline": "Big rig, small scale.",
     "category": "trucks",
@@ -898,19 +1027,23 @@ window.CARS = [
         "name": "Gray",
         "hex": "#8d9399",
         "extra": 0,
-        "image": "assets/img/products/mac-gray.webp"
+        "image": "assets/img/cutouts/mac-gray.webp",
+        "photo": "assets/img/products/mac-gray.webp"
       },
       {
         "name": "Red",
         "hex": "#c8202a",
         "extra": 0,
-        "image": "assets/img/products/mac-red.webp"
+        "image": "assets/img/cutouts/mac-red.webp",
+        "photo": "assets/img/products/mac-red.webp"
       }
     ],
     "categoryLabel": "RC truck"
   },
   {
     "id": "vera",
+    "cutout": true,
+    "face": "right",
     "name": "Vera Bus",
     "tagline": "Road-trip van vibes.",
     "category": "trucks",
@@ -926,13 +1059,15 @@ window.CARS = [
         "name": "Hammer Orange",
         "hex": "#f0861e",
         "extra": 0,
-        "image": "assets/img/products/vera-rc-bus-hammer-orange.webp"
+        "image": "assets/img/cutouts/vera-rc-bus-hammer-orange.webp",
+        "photo": "assets/img/products/vera-rc-bus-hammer-orange.webp"
       },
       {
         "name": "Underground Blue",
         "hex": "#2a7fd6",
         "extra": 0,
-        "image": "assets/img/products/vera-rc-bus-underground-blue.webp"
+        "image": "assets/img/cutouts/vera-rc-bus-underground-blue.webp",
+        "photo": "assets/img/products/vera-rc-bus-underground-blue.webp"
       }
     ],
     "categoryLabel": "RC truck"

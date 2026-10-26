@@ -281,3 +281,11 @@ a.info-card:hover { background: var(--ink); color: #fff; transform: translateX(6
 .about-band--photo img { width: 100%; height: 100%; object-fit: cover; filter: none; }
 .nf-car--photo { width: min(260px, 60vw); animation: nfLost 4s ease-in-out infinite; }
 .nf-car--photo img { width: 100%; aspect-ratio: 1; object-fit: cover; border-radius: 22px; box-shadow: 0 30px 60px -20px rgba(0, 0, 0, .5); }
+.cfg-car:not(.cfg-car--photo) img { filter: drop-shadow(0 30px 22px rgba(0, 0, 0, .28)); }
+.cfg-scene { margin: 28px 0 0; }
+.cfg-scene figcaption { margin-bottom: 10px; font-size: 13px; font-weight: 700; letter-spacing: .12em; text-transform: uppercase; color: var(--muted); }
+.cfg-scene img { width: 100%; max-width: 420px; aspect-ratio: 1; object-fit: cover; border-radius: 18px; }
+.about-band--cut figure { background: var(--tone, var(--cream)); }
+.about-band--cut img { width: 92%; height: auto; object-fit: contain; filter: drop-shadow(0 24px 18px rgba(0, 0, 0, .25)); }
+.nf-car--cut { width: min(420px, 80vw); }
+.nf-car--cut img { aspect-ratio: auto; border-radius: 0; box-shadow: none; filter: drop-shadow(0 20px 14px rgba(0, 0, 0, .25)); }

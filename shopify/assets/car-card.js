@@ -26,7 +26,7 @@
   function html(c, i) {
     var s = c.specs || {};
     var specs = [[s.power, 'Power'], [s.accel, '0–100'], [s.range, 'Range']].filter(function (x) { return x[0]; });
-    var photo = !!(c.paints[0].image || c.image);
+    var photo = !!(c.paints[0].image || c.image) && !c.cutout;
     var MAXDOTS = 6, more = c.paints.length - MAXDOTS;
     return '' +
       '<article class="cc' + (photo ? ' cc--photo' : '') + '" data-id="' + esc(c.id) + '" data-reveal style="--tone:' + esc(c.tone || '#eef0f2') + ';--rd:' + ((i || 0) % 3 * 0.08).toFixed(2) + 's">' +

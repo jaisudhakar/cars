@@ -55,7 +55,7 @@
       el.setAttribute('aria-label', p.name);
       var pt = p.paints[0];
       var img = pt.image || p.image;
-      if (img) el.className += ' orbit-car--photo';
+      if (img && !p.cutout) el.className += ' orbit-car--photo';
       el.innerHTML = '<span class="orbit-float">' + (img
         ? '<img src="' + esc(img) + '" alt="" draggable="false" decoding="async">'
         : (window.CarArt ? window.CarArt.svg(p.style, pt.hex) : '')) + '</span>';
@@ -71,7 +71,7 @@
     /* ---------- geometry ---------- */
     var W = 0, H = 0, C = { x: 0, y: 0 }, R = 0, A0 = 0, STEP = 0.36, BASE = 300;
     // product photos are square cards: smaller, and anchored by their middle instead of their wheels
-    var photos = items.some(function (p) { return p.paints[0].image || p.image; });
+    var photos = items.some(function (p) { return (p.paints[0].image || p.image) && !p.cutout; });
     var LIFT = photos ? 0.55 : 0.3;
     function measure() {
       var r = stage.getBoundingClientRect();

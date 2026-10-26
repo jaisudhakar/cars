@@ -10,6 +10,8 @@
   Any empty value falls back to the product metafields custom.body_style, custom.tagline,
   custom.power, custom.accel, custom.range, custom.top_speed, custom.paint_colors;
   fallback_style is used when neither style nor the metafield is set.
+  cutout: true when the photos have transparent backgrounds (cars drive on the road instead of riding
+  as square photo cards); face: 'left' when the car faces left in its photo (it then enters from the right).
 {%- endcomment -%}
 {%- liquid
   assign mf = product.metafields.custom
@@ -33,6 +35,8 @@
 -%}
 {
   "id": {{ product.handle | json }},
+  "cutout": {% if cutout %}true{% else %}false{% endif %},
+  "face": {{ face | default: 'right' | json }},
   "name": {{ product.title | json }},
   "tagline": {{ c_tagline | default: '' | json }},
   "style": {{ c_style | json }},

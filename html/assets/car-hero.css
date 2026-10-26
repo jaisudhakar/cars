@@ -159,3 +159,16 @@
   .ch:has(.ch-car--photo) .ch-bar { position: relative; padding-top: 6px; }
   .ch-paints { flex-wrap: wrap; }
 }
+
+/* cut-out photo in the hero */
+.ch-car.ch-car--cut { width: min(54vw, 860px); bottom: 20%; }
+.ch-car--cut img { position: relative; z-index: 1; filter: drop-shadow(0 30px 22px rgba(0, 0, 0, .7)) drop-shadow(0 0 60px color-mix(in srgb, var(--hero-paint, #1f55d6) 35%, transparent)); }
+.ch-car--cut .ch-trail { top: 44%; bottom: 14%; }
+.ch-car--cut[data-face="left"] .ch-trail { transform: scaleX(1); }
+.ch-parked .ch-car--cut { animation: chFloat 3.4s ease-in-out infinite; }
+@media (max-width: 899.98px) {
+  .ch:has(.ch-car--cut) .ch-road { position: relative; height: calc(min(96vw, 520px) * .375 + 90px); flex: 0 0 auto; }
+  .ch:has(.ch-car--cut) { display: flex; flex-direction: column; min-height: 0; }
+  .ch:has(.ch-car--cut) .ch-bar { position: relative; padding-top: 6px; }
+  .ch-car.ch-car--cut { left: 50%; right: auto; margin: 0 0 0 calc(min(96vw, 520px) / -2); width: min(96vw, 520px); bottom: 30px; }
+}

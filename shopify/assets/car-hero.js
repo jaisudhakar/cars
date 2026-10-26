@@ -14,7 +14,10 @@
     var style = slot.getAttribute('data-style') || 'ev';
     var hex = slot.getAttribute('data-paint') || '#1f55d6';
     var img = slot.getAttribute('data-image');
-    if (img) slot.classList.add('ch-car--photo');
+    var cutout = slot.hasAttribute('data-cutout');
+    var face = slot.getAttribute('data-face') === 'left' ? -1 : 1;   // a car facing left enters from the right
+    if (img && !cutout) slot.classList.add('ch-car--photo');
+    if (cutout) slot.classList.add('ch-car--cut');
     slot.innerHTML = (img ? '<span class="ch-trail" aria-hidden="true"></span><img src="' + img + '" alt="" decoding="async">'
       : '<span class="ch-beam" aria-hidden="true"></span>' + (window.CarArt ? window.CarArt.svg(style, hex) : ''));
     var dots = sec.querySelector('[data-hero-paints]');
@@ -42,7 +45,7 @@
       if (!t0) t0 = now;
       var t = clamp((now - t0) / 1800, 0, 1);
       var e = 1 - Math.pow(1 - t, 4);
-      enterX = -(window.innerWidth * 1.1) * (1 - e);
+      enterX = -(window.innerWidth * 1.1) * (1 - e) * face;
       sec.classList.toggle('ch-moving', t < 0.85);
       render();
       if (t < 1) requestAnimationFrame(enter);
@@ -54,7 +57,7 @@
         raf = 0;
         var r = sec.getBoundingClientRect();
         var y = clamp(-r.top, 0, r.height);
-        scrollX = reduce ? 0 : y * (window.innerWidth < 900 ? 0.45 : 1.25);
+        scrollX = (reduce ? 0 : y * (window.innerWidth < 900 ? 0.45 : 1.25)) * face;
         sec.classList.toggle('ch-moving', y > 8 && y < r.height * 0.9);
         if (copy && !reduce) {
           copy.style.transform = 'translate3d(0,' + (-y * 0.25).toFixed(1) + 'px,0)';

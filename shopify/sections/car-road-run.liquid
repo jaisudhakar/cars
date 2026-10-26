@@ -9,6 +9,10 @@
 
 {%- liquid
   assign s = section.settings
+  assign cut = false
+  if s.photo_style == 'cutout'
+    assign cut = true
+  endif
   assign count = 0
   for block in section.blocks
     if block.settings.product != blank
@@ -117,7 +121,7 @@
         {%- if p == blank -%}{%- continue -%}{%- endif -%}
         {%- unless first -%},{%- endunless -%}
         {%- assign first = false -%}
-        {%- render 'car-json', product: p, style: block.settings.style, tagline: block.settings.tagline, paints: block.settings.paints, image: block.settings.image, power: block.settings.power, accel: block.settings.accel, range: block.settings.range, top: block.settings.top -%}
+        {%- render 'car-json', product: p, cutout: cut, face: block.settings.face, style: block.settings.style, tagline: block.settings.tagline, paints: block.settings.paints, image: block.settings.image, power: block.settings.power, accel: block.settings.accel, range: block.settings.range, top: block.settings.top -%}
       {%- endfor -%}
     ]
   </script>
@@ -129,6 +133,11 @@
   "tag": "div",
   "class": "section-car-road-run",
   "settings": [
+    {
+      "type": "select", "id": "photo_style", "label": "Product photos", "default": "cutout",
+      "options": [ { "value": "cutout", "label": "Cut-outs (transparent background)" }, { "value": "card", "label": "Square photos with background" } ],
+      "info": "Cut-outs drive on the road like real cars. Use square cards when the photos still have their background."
+    },
     { "type": "text", "id": "label", "label": "Section name (screen readers)", "default": "Road Run — scroll to drive through the line-up" },
     {
       "type": "select", "id": "scene", "label": "Scene", "default": "night",
@@ -164,6 +173,7 @@
           ]
         },
         { "type": "image_picker", "id": "image", "label": "Photo (optional)", "info": "Defaults to the product's featured image; each colour uses its variant image." },
+        { "type": "select", "id": "face", "label": "Car faces (in its photo)", "default": "right", "options": [ { "value": "right", "label": "Right" }, { "value": "left", "label": "Left" } ] },
         { "type": "text", "id": "tagline", "label": "Tagline", "default": "" },
         { "type": "textarea", "id": "paints", "label": "Swatch colours", "info": "One per line: Name: #hex — e.g. Burnout Red: #b3121c. Not needed if the Color option has swatches." },
         { "type": "text", "id": "power", "label": "Power", "default": "" },

@@ -75,11 +75,15 @@
       var el = document.createElement('div');
       el.className = 'rr-car';
       el.setAttribute('aria-hidden', 'true');
-      var photo = !!(c.paints[0].image || c.image);
+      // square scene photos ride as cards; cut-outs (c.cutout) drive like the drawings
+      var photo = !!(c.paints[0].image || c.image) && !c.cutout;
+      var cut = !!(c.paints[0].image || c.image) && !!c.cutout;
+      if (cut) el.className += ' rr-car--cut';
       if (photo) el.className += ' rr-car--photo';
-      el.innerHTML = '<div class="rr-car-in">' + (photo ? '<span class="rr-trail"></span>' : '<span class="rr-beam"></span>') + art(c, 0) + '</div>';
+      el.innerHTML = '<div class="rr-car-in">' + (photo || cut ? '<span class="rr-trail"></span>' : '<span class="rr-beam"></span>') + art(c, 0) + '</div>';
       stage.appendChild(el);
-      return { el: el, inner: el.querySelector('.rr-car-in'), photo: photo, x: -9999, vis: false };
+      // a cut-out facing left drives in from the right, so it never looks like it is reversing
+      return { el: el, inner: el.querySelector('.rr-car-in'), photo: photo, cut: cut, dir: c.face === 'left' ? -1 : 1, x: -9999, vis: false };
     });
     function art(c, pi) {
       var p = c.paints[pi];
@@ -157,7 +161,11 @@
         var t = p - i;
         var a = Math.abs(t);
         var g = a < 0.22 ? 0 : Math.pow((a - 0.22) / 0.78, 1.35) * (t < 0 ? -1 : 1);
-        var x = cx + g * drive;
+        var x = cx + g * drive * c.dir;
+        // cut-outs leave by driving off down the track (smaller, higher, fading) so a car arriving
+        // from the other side never meets the one leaving head-on
+        var depth = 0;
+        if (c.cut && g > 0) { depth = Math.min(1, g * 1.6); x = cx + depth * W * 0.16 * c.dir; }
         var w = c.photo ? cardW : carW;
         var vis = a < 1.05 && x > -w && x < W + w;
         if (vis !== c.vis) { c.vis = vis; c.el.style.visibility = vis ? 'visible' : 'hidden'; }
@@ -168,7 +176,11 @@
         var tiltDeg = reduce ? 0 : clamp(-vx * 0.04, -1.6, 1.6);
         var bob = reduce || a < 0.22 ? 0 : Math.sin(x * 0.05) * 1.2;
         var top = c.photo ? cardBase - cardW + bob : roadY - carH * 214 / 240 + bob;
-        c.el.style.transform = 'translate3d(' + (x - w / 2).toFixed(1) + 'px,' + top.toFixed(1) + 'px,0)';
+        var sc = 1 - depth * 0.62;
+        if (depth) top = roadY - depth * (roadY - H * 0.68) - carH * 214 / 240;   // scales around the tyres (transform-origin)
+        c.el.style.transform = 'translate3d(' + (x - w / 2).toFixed(1) + 'px,' + top.toFixed(1) + 'px,0)' + (depth ? ' scale(' + sc.toFixed(3) + ')' : '');
+        c.el.style.opacity = depth ? (1 - depth).toFixed(3) : '';
+        c.el.style.zIndex = depth ? 1 : 2;
         if (c.photo) {
           // photos lean into the motion and leave a light trail
           var lean = reduce ? 0 : clamp(-vx * 0.06, -4, 4);
@@ -177,7 +189,10 @@
           c.inner.style.setProperty('--dir', vx > 0 ? '1' : '-1');
         } else {
           c.inner.style.transform = 'rotate(' + tiltDeg.toFixed(2) + 'deg)';
-          if (window.CarArt) window.CarArt.spin(c.el, (x / (carW * 34 / 640)) * 57.2958);
+          if (c.cut) {
+            c.inner.style.setProperty('--trail', clamp(Math.abs(vx) / 30, 0, 1).toFixed(3));
+            c.inner.style.setProperty('--dir', vx > 0 ? '1' : '-1');
+          } else if (window.CarArt) window.CarArt.spin(c.el, (x / (carW * 34 / 640)) * 57.2958);
         }
         c.el.classList.toggle('is-parked', a < 0.22);
       });

@@ -10,17 +10,19 @@ cart and section pattern), delivered two ways from the same CSS/JS:
 | `shopify/` | Theme sections + snippets + assets to drop into any Shopify theme (Dawn or similar). |
 | `reference/` | The "drag the wheel" design reference the Garage wheel is based on. |
 
-All product imagery is the client's own photos (`html/assets/img/products/`, one photo per colour,
-82 photos for 25 products). **Prices in `html/assets/data/catalog.js` are demo values** — replace them with the
+All product imagery is the client's own photos: 82 photos for 25 products, one per colour. The animations use
+**cut-outs** of them (`html/assets/img/cutouts/` — background, remote, cones and tyres removed, every car lined up
+on the same ground line); the original scene photos (`html/assets/img/products/`) appear as "In the box" on product
+pages. See `scripts/cutouts/README.md` to make cut-outs for new photos. **Prices in `html/assets/data/catalog.js` are demo values** — replace them with the
 real prices, or use the Shopify sections, which read prices from the store.
 
 ## The animations
 
 | Section | What happens |
 | --- | --- |
-| **Road Run** (signature) | A pinned neon night track. As you scroll, each product photo drives in from the left (it leans into the motion and leaves light streaks), parks in front of you, then drives off as the next one arrives. While parked it shows name, tagline, price, highlights and its **colours** — pick one and the photo swaps to that colour (and the price follows if colours are priced differently). The neon light tubes, glow and price underline take the colour you pick; the kerb and lane lines slide past; a speedometer follows your scroll speed. A list on the right jumps to any car. |
+| **Road Run** (signature) | A pinned neon night track. As you scroll, each car drives in (from the side it faces, leaving light streaks), parks on the track in front of you, then drives off down the track as the next one arrives. While parked it shows name, tagline, price, highlights and its **colours** — pick one and the photo swaps to that colour (and the price follows if colours are priced differently). The neon light tubes, glow and price underline take the colour you pick; the kerb and lane lines slide past; a speedometer follows your scroll speed. A list on the right jumps to any car. |
 | **Garage wheel** | The interaction from `reference/showroom-wheel-reference.png`: product photos ride a big arc, drag them or the knurled "Drag the wheel" control (or scroll sideways / arrow keys). Colour swatches swap the front photo; **Add to cart**. |
-| **Hero** | The Ghost Drift photo drives in when the page opens and drives off as you scroll; ten colour dots swap between its ten liveries. |
+| **Hero** | The Ghost Drift drives in when the page opens and drives off as you scroll; ten colour dots swap between its ten liveries. |
 | Category tiles | Photo tiles; a colour fill sweeps in and the photo zooms on hover. |
 | Stats band | Counts up the real numbers from the catalog (models, colourways, drift cars, off-road). |
 | Feature scroll | Sticky photo panel follows the active point. |

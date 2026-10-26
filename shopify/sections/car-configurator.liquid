@@ -8,7 +8,13 @@
 {{ 'pages.css' | asset_url | stylesheet_tag }}
 <script src="{{ 'car-sections.js' | asset_url }}" defer></script>
 <script src="{{ 'car-config.js' | asset_url }}" defer></script>
-{%- assign s = section.settings -%}
+{%- liquid
+  assign s = section.settings
+  assign cut = false
+  if s.photo_style == 'cutout'
+    assign cut = true
+  endif
+-%}
 <div class="sx cfg" data-cfg data-currency="{{ cart.currency.iso_code }}" data-apr="{{ s.apr }}" data-months="{{ s.months }}" data-down="{{ s.down }}" {{ section.shopify_attributes }}>
   <div class="container">
     <div class="cfg-stage" style="--tone: {{ s.tone }};">
@@ -54,7 +60,7 @@
     <button type="button" class="btn btn-dark" data-sticky-reserve>{{ s.reserve_label | escape }}</button>
   </div>
   <script type="application/json" data-cfg-json>
-    {%- render 'car-json', product: product, fallback_style: s.style -%}
+    {%- render 'car-json', cutout: cut, product: product, fallback_style: s.style -%}
   </script>
 </div>
 
@@ -65,6 +71,11 @@
   "class": "section-car-configurator",
   "enabled_on": { "templates": ["product"] },
   "settings": [
+    {
+      "type": "select", "id": "photo_style", "label": "Product photos", "default": "cutout",
+      "options": [ { "value": "cutout", "label": "Cut-outs (transparent background)" }, { "value": "card", "label": "Square photos with background" } ],
+      "info": "Cut-outs drive on the road like real cars. Use square cards when the photos still have their background."
+    },
     {
       "type": "select", "id": "style", "label": "Drawing when the product has no body style", "default": "sedan",
       "info": "Set the metafield custom.body_style per product to override.",

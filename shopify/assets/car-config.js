@@ -61,7 +61,10 @@
     if (car.tone) main.style.setProperty('--tone', car.tone);
     var img = car.paints[k].image || car.image;
     stage.innerHTML = img ? '<img src="' + esc(img) + '" alt="' + esc(car.name) + '">' : window.CarArt.svg(car.style, car.paints[k].hex, { title: car.name });
-    stage.classList.toggle('cfg-car--photo', !!img);
+    stage.classList.toggle('cfg-car--photo', !!img && !car.cutout);
+    // the original scene photo of the chosen colour ("in the box")
+    var scene = $('[data-cfg-scene]', main);
+    function showScene(p) { if (scene) { var s = p.photo || ''; scene.hidden = !s; if (s) scene.querySelector('img').src = s; } }
     var min = Math.min.apply(null, car.paints.map(amount));
     var countEl = $('[data-cfg-count]', main);
     if (countEl) countEl.textContent = car.paints.length > 1 ? car.paints.length + ' colours' : 'One finish';
@@ -116,6 +119,7 @@
       }
       else window.CarArt.paint(stage, p.hex);
       main.style.setProperty('--paint', p.hex);
+      showScene(p);
       text(ui.paintName, p.name);
       countPrice(amount(p));
       if (ui.month) ui.month.textContent = money(Math.round(monthly(amount(p))));
