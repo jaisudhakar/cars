@@ -16,6 +16,10 @@
     endif
   endfor
   assign count_label = count | prepend: '0' | slice: -2, 2
+  assign night = false
+  if s.scene == 'night'
+    assign night = true
+  endif
   if s.mountains != blank
     assign img_mtn = s.mountains | image_url: width: 2400
   else
@@ -32,12 +36,20 @@
   class="sx rr"
   data-rr
   data-rr-snap="{{ s.snap }}"
+  {% if night %}data-rr-sky="night"{% endif %}
   data-currency="{{ cart.currency.iso_code }}"
   aria-label="{{ s.label | escape }}"
   style="--accent: {{ s.accent }};"
   {{ section.shopify_attributes }}
 >
   <div class="rr-sticky">
+    {%- if night -%}
+      <div class="rr-glow" aria-hidden="true"></div>
+      <div class="rr-layer rr-neon rr-neon--far" data-rr-layer="0.12" data-tile="180" aria-hidden="true"></div>
+      <div class="rr-layer rr-neon" data-rr-layer="0.3" data-tile="260" aria-hidden="true"></div>
+      {%- if s.show_ghost -%}<div class="rr-ghost" data-rr-ghost aria-hidden="true"></div>{%- endif -%}
+      <div class="rr-wall" aria-hidden="true"></div>
+    {%- else -%}
     <div class="rr-stars" aria-hidden="true"></div>
     <div class="rr-sun" aria-hidden="true"></div>
     <div class="rr-moon" aria-hidden="true"></div>
@@ -51,11 +63,13 @@
     <div class="rr-layer rr-lamps" style="background-image:url({{ 'road-lamps.svg' | asset_url }})" data-rr-layer="0.5" data-aspect="2.1875" aria-hidden="true"></div>
     <div class="rr-shade" aria-hidden="true"></div>
     <div class="rr-layer rr-lamps-glow" style="background-image:url({{ 'road-lamps-glow.svg' | asset_url }})" data-rr-layer="0.5" data-aspect="2.1875" aria-hidden="true"></div>
+    {%- endif -%}
     <div class="rr-road" aria-hidden="true">
       <div class="rr-road-sheen"></div>
       <div class="rr-lane" data-rr-lane></div>
       <div class="rr-edge"></div>
     </div>
+    {%- if night -%}<div class="rr-layer rr-kerb" data-rr-layer="1" data-tile="80" aria-hidden="true"></div>{%- endif -%}
     <div class="rr-scrim" aria-hidden="true"></div>
     <div class="rr-cars" data-rr-cars></div>
 
@@ -116,9 +130,13 @@
   "class": "section-car-road-run",
   "settings": [
     { "type": "text", "id": "label", "label": "Section name (screen readers)", "default": "Road Run — scroll to drive through the line-up" },
+    {
+      "type": "select", "id": "scene", "label": "Scene", "default": "night",
+      "options": [ { "value": "night", "label": "Neon night track (best with product photos)" }, { "value": "city", "label": "Road through the city, day to night" } ]
+    },
     { "type": "text", "id": "kicker", "label": "Small label after the counter", "default": "Road Run" },
-    { "type": "text", "id": "price_label", "label": "Price label", "default": "Price in this paint" },
-    { "type": "text", "id": "reserve_label", "label": "Reserve button", "default": "Reserve this car" },
+    { "type": "text", "id": "price_label", "label": "Price label", "default": "Price" },
+    { "type": "text", "id": "reserve_label", "label": "Reserve button", "default": "Add to cart" },
     { "type": "text", "id": "details_label", "label": "Details link", "default": "Explore" },
     { "type": "text", "id": "hint", "label": "Scroll hint", "default": "Scroll to drive" },
     { "type": "color", "id": "accent", "label": "Accent", "default": "#ff4d1a" },
@@ -127,7 +145,7 @@
     { "type": "checkbox", "id": "show_steps", "label": "Show model list", "default": true },
     { "type": "checkbox", "id": "show_ghost", "label": "Show big model name behind the car", "default": true },
     { "type": "checkbox", "id": "snap", "label": "Roll on to the nearest car when scrolling stops", "default": true },
-    { "type": "header", "content": "Scenery (optional)" },
+    { "type": "header", "content": "City scenery (city scene only)" },
     { "type": "paragraph", "content": "Wide images with transparent backgrounds that tile sideways. Leave empty for the built-in mountains and city." },
     { "type": "image_picker", "id": "mountains", "label": "Far layer (mountains)" },
     { "type": "image_picker", "id": "city", "label": "Middle layer (city)" }
@@ -137,21 +155,21 @@
       "type": "car",
       "name": "Car",
       "settings": [
-        { "type": "product", "id": "product", "label": "Product", "info": "Paints come from the option named Color, Colour or Paint. Each paint's price is that variant's price." },
+        { "type": "product", "id": "product", "label": "Product", "info": "Colours come from the option named Color, Colour or Paint; each colour uses its variant image and price." },
         {
-          "type": "select", "id": "style", "label": "Body (built-in drawing)", "default": "sedan",
+          "type": "select", "id": "style", "label": "Drawing if the product has no photo", "default": "sedan",
           "options": [
             { "value": "sedan", "label": "Sedan" }, { "value": "ev", "label": "Electric sedan" }, { "value": "coupe", "label": "Sports coupe" },
             { "value": "suv", "label": "SUV" }, { "value": "hatch", "label": "Hatchback / wagon" }, { "value": "pickup", "label": "Pickup truck" }
           ]
         },
-        { "type": "image_picker", "id": "image", "label": "Photo instead of the drawing", "info": "Transparent PNG/WebP, side view, facing right. Variant images are used per paint if set." },
-        { "type": "text", "id": "tagline", "label": "Tagline", "default": "Built to move." },
-        { "type": "textarea", "id": "paints", "label": "Paint colours", "info": "One per line: Name: #hex — e.g. Rosso Red: #c3161f. Not needed if the Color option has swatches." },
-        { "type": "text", "id": "power", "label": "Power", "default": "300 hp" },
-        { "type": "text", "id": "accel", "label": "0–100 km/h", "default": "5.0 s" },
-        { "type": "text", "id": "range", "label": "Range", "default": "600 km" },
-        { "type": "text", "id": "top", "label": "Top speed", "default": "240 km/h" }
+        { "type": "image_picker", "id": "image", "label": "Photo (optional)", "info": "Defaults to the product's featured image; each colour uses its variant image." },
+        { "type": "text", "id": "tagline", "label": "Tagline", "default": "" },
+        { "type": "textarea", "id": "paints", "label": "Swatch colours", "info": "One per line: Name: #hex — e.g. Burnout Red: #b3121c. Not needed if the Color option has swatches." },
+        { "type": "text", "id": "power", "label": "Power", "default": "" },
+        { "type": "text", "id": "accel", "label": "0–100 km/h", "default": "" },
+        { "type": "text", "id": "range", "label": "Range", "default": "" },
+        { "type": "text", "id": "top", "label": "Top speed", "default": "" }
       ]
     }
   ],

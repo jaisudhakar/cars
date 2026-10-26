@@ -8,8 +8,9 @@
 {%- liquid
   assign s = section.settings
   assign td_id = 'td-form-' | append: section.id
+  assign strip_col = s.collection | default: collections.all
 -%}
-<section id="test-drive-{{ section.id }}" class="sx td" style="--night: {{ s.background }};" {{ section.shopify_attributes }}>
+<section id="test-drive-{{ section.id }}" class="sx td{% if strip_col.products.size > 0 %} td--strip{% endif %}" style="--night: {{ s.background }};" {{ section.shopify_attributes }}>
   <div class="container">
     <div class="td-card" data-reveal="up">
       {%- if s.eyebrow != blank -%}<p class="eyebrow">{{ s.eyebrow | escape }}</p>{%- endif -%}
@@ -35,7 +36,13 @@
     </div>
   </div>
   <div class="td-road" aria-hidden="true"></div>
-  <div class="td-car" data-car-art="{{ s.style }}" data-paint="{{ s.paint }}" aria-hidden="true"></div>
+  {%- if strip_col.products.size > 0 -%}
+    <div class="td-strip" aria-hidden="true">
+      {%- for k in (1..2) -%}{%- for p in strip_col.products limit: 16 -%}{%- if p.featured_image -%}{{ p.featured_image | image_url: width: 240 | image_tag: loading: 'lazy', alt: '' }}{%- endif -%}{%- endfor -%}{%- endfor -%}
+    </div>
+  {%- else -%}
+    <div class="td-car" data-car-art="{{ s.style }}" data-paint="{{ s.paint }}" aria-hidden="true"></div>
+  {%- endif -%}
 </section>
 
 {% schema %}

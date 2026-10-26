@@ -37,7 +37,7 @@
 
   function isCurrent(href) {
     var file = href.split('#')[0].split('?')[0].toLowerCase();
-    return file === page && href.indexOf('#') < 0;
+    return file === page && href.indexOf('#') < 0 && href.indexOf('?') < 0;
   }
   function logo() {
     return B.logo

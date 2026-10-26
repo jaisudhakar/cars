@@ -32,7 +32,7 @@
           <div><small>{{ s.price_label | escape }}</small><span class="cfg-price" data-cfg-price></span></div>
           {%- if s.show_monthly -%}<div class="cfg-month">or from<b data-cfg-month></b>/month*</div>{%- endif -%}
         </div>
-        <div class="cfg-opt-head"><span>{{ s.paint_label | escape }}</span><span>Prices update as you pick</span></div>
+        <div class="cfg-opt-head"><span>{{ s.paint_label | escape }}</span><span data-cfg-count></span></div>
         <div class="cfg-paints" data-cfg-paints role="radiogroup" aria-label="{{ s.paint_label | escape }}"></div>
         <div class="cfg-buy">
           <button type="button" class="btn btn-dark" data-cfg-reserve>{{ s.reserve_label | escape }}</button>
@@ -73,14 +73,14 @@
         { "value": "suv", "label": "SUV" }, { "value": "hatch", "label": "Hatchback / wagon" }, { "value": "pickup", "label": "Pickup truck" }
       ]
     },
-    { "type": "text", "id": "price_label", "label": "Price label", "default": "Price in this paint" },
-    { "type": "text", "id": "paint_label", "label": "Paint label", "default": "Paint" },
-    { "type": "text", "id": "reserve_label", "label": "Reserve button", "default": "Reserve" },
-    { "type": "text", "id": "test_label", "label": "Second button", "default": "Book a test drive" },
+    { "type": "text", "id": "price_label", "label": "Price label", "default": "Price" },
+    { "type": "text", "id": "paint_label", "label": "Colour label", "default": "Colour" },
+    { "type": "text", "id": "reserve_label", "label": "Add button", "default": "Add to cart" },
+    { "type": "text", "id": "test_label", "label": "Second button", "default": "Ask a question" },
     { "type": "url", "id": "test_url", "label": "Second button link" },
     { "type": "text", "id": "spin_label", "label": "Drive button", "default": "Take it for a spin" },
-    { "type": "textarea", "id": "perks", "label": "Perks (one per line)", "default": "Refundable reservation deposit\nFree home delivery within 100 km\n8-year battery & powertrain warranty" },
-    { "type": "checkbox", "id": "show_monthly", "label": "Show monthly estimate", "default": true },
+    { "type": "textarea", "id": "perks", "label": "Perks (one per line)", "default": "Remote included in the box\nA real photo of every colour" },
+    { "type": "checkbox", "id": "show_monthly", "label": "Show monthly estimate", "default": false },
     { "type": "range", "id": "down", "label": "Estimate deposit", "min": 0, "max": 50, "step": 5, "unit": "%", "default": 20 },
     { "type": "range", "id": "months", "label": "Estimate term", "min": 12, "max": 96, "step": 12, "unit": "mo", "default": 48 },
     { "type": "range", "id": "apr", "label": "Estimate APR", "min": 0, "max": 15, "step": 0.1, "unit": "%", "default": 4.9 },

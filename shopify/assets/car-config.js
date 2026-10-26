@@ -61,11 +61,14 @@
     if (car.tone) main.style.setProperty('--tone', car.tone);
     var img = car.paints[k].image || car.image;
     stage.innerHTML = img ? '<img src="' + esc(img) + '" alt="' + esc(car.name) + '">' : window.CarArt.svg(car.style, car.paints[k].hex, { title: car.name });
+    stage.classList.toggle('cfg-car--photo', !!img);
     var min = Math.min.apply(null, car.paints.map(amount));
+    var countEl = $('[data-cfg-count]', main);
+    if (countEl) countEl.textContent = car.paints.length > 1 ? car.paints.length + ' colours' : 'One finish';
     ui.paints.innerHTML = car.paints.map(function (p, i) {
       var extra = amount(p) - min;
       return '<button type="button" class="cfg-paint' + (p.av === false ? ' is-na' : '') + '" role="radio" aria-checked="false" data-k="' + i + '" style="--c:' + esc(p.hex) + '">' +
-        '<i aria-hidden="true"></i><span><strong>' + esc(p.name) + '</strong><small>' + (p.av === false ? 'Sold out' : (extra ? '+' + money(extra) : 'Included')) + '</small></span></button>';
+        '<i aria-hidden="true"></i><span><strong>' + esc(p.name) + '</strong>' + (p.av === false ? '<small>Sold out</small>' : (extra ? '<small>+' + money(extra) + '</small>' : '')) + '</span></button>';
     }).join('');
 
     // specs with count-up numbers
@@ -100,7 +103,17 @@
       k = i;
       var p = car.paints[i];
       var im = stage.querySelector('img');
-      if (im) { var src = p.image || car.image; if (src) im.src = src; }
+      if (im) {
+        var src = p.image || car.image;
+        if (src && im.getAttribute('src') !== src) {
+          var pre = new Image();
+          pre.onload = function () {
+            im.src = src;
+            if (im.animate && !reduce) im.animate([{ opacity: 0.3, transform: 'scale(.97)' }, { opacity: 1, transform: 'none' }], { duration: 340, easing: 'cubic-bezier(.22,1,.36,1)' });
+          };
+          pre.src = src;
+        }
+      }
       else window.CarArt.paint(stage, p.hex);
       main.style.setProperty('--paint', p.hex);
       text(ui.paintName, p.name);
@@ -181,7 +194,7 @@
         })
         .catch(function (err) {
           ui.msg.className = 'cfg-msg is-err';
-          ui.msg.textContent = (err && err.message) || 'Could not reserve. Please try again.';
+          ui.msg.textContent = (err && err.message) || 'Could not add to cart. Please try again.';
         })
         .then(function () { btn.classList.remove('is-busy'); });
     }

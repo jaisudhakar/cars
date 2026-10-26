@@ -14,6 +14,7 @@
       return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c];
     });
   }
+  var LABEL = (window.BRAND && window.BRAND.addLabel) || 'Add to cart';
   function url(c) { return c.url || ('car.html?id=' + encodeURIComponent(c.id)); }
   function art(c, k) {
     var p = c.paints[k || 0];
@@ -25,25 +26,29 @@
   function html(c, i) {
     var s = c.specs || {};
     var specs = [[s.power, 'Power'], [s.accel, '0–100'], [s.range, 'Range']].filter(function (x) { return x[0]; });
+    var photo = !!(c.paints[0].image || c.image);
+    var MAXDOTS = 6, more = c.paints.length - MAXDOTS;
     return '' +
-      '<article class="cc" data-id="' + esc(c.id) + '" data-reveal style="--tone:' + esc(c.tone || '#eef0f2') + ';--rd:' + ((i || 0) % 3 * 0.08).toFixed(2) + 's">' +
+      '<article class="cc' + (photo ? ' cc--photo' : '') + '" data-id="' + esc(c.id) + '" data-reveal style="--tone:' + esc(c.tone || '#eef0f2') + ';--rd:' + ((i || 0) % 3 * 0.08).toFixed(2) + 's">' +
       '  <a class="cc-media" href="' + esc(url(c)) + '" data-cursor="Drive" aria-label="' + esc(c.name) + '">' +
-      '    <span class="cc-ghost" aria-hidden="true">' + esc(c.name) + '</span>' +
+      (photo ? '' : '    <span class="cc-ghost" aria-hidden="true">' + esc(c.name) + '</span>') +
       '    <span class="cc-car">' + art(c, 0) + '</span>' +
       (c.badge ? '    <span class="cc-badge">' + esc(c.badge) + '</span>' : '') +
-      '    <span class="cc-year">' + esc(c.year || '') + '</span>' +
+      (c.year ? '    <span class="cc-year">' + esc(c.year) + '</span>' : '') +
       '  </a>' +
       '  <div class="cc-body">' +
       '    <div class="cc-top">' +
       '      <div><h3 class="cc-name"><a href="' + esc(url(c)) + '">' + esc(c.name) + '</a></h3><p class="cc-cat">' + esc([c.categoryLabel, c.fuel].filter(Boolean).join(' · ')) + '</p></div>' +
       '      <div class="cc-price"><small>From</small><strong data-cc-price>' + esc(c.paints[0].price || c.price) + '</strong></div>' +
       '    </div>' +
-      (specs.length ? '    <ul class="cc-specs">' + specs.map(function (x) { return '<li><b>' + esc(x[0]) + '</b>' + x[1] + '</li>'; }).join('') + '</ul>' : '') +
+      (specs.length ? '    <ul class="cc-specs">' + specs.map(function (x) { return '<li><b>' + esc(x[0]) + '</b>' + x[1] + '</li>'; }).join('') + '</ul>'
+        : (c.details && c.details.length ? '    <ul class="cc-chips">' + c.details.slice(0, 3).map(function (d) { return '<li>' + esc(d) + '</li>'; }).join('') + '</ul>' : '')) +
       '    <div class="cc-foot">' +
-      '      <div class="cc-paints" role="radiogroup" aria-label="Paint for ' + esc(c.name) + '">' + c.paints.map(function (p, k) {
+      '      <div class="cc-paints" role="radiogroup" aria-label="Colour for ' + esc(c.name) + '">' + (c.paints.length > 1 ? c.paints.slice(0, MAXDOTS).map(function (p, k) {
         return '<button type="button" role="radio" aria-checked="' + (k === 0) + '" data-k="' + k + '" style="--c:' + esc(p.hex) + '" aria-label="' + esc(p.name + ' — ' + p.price) + '" title="' + esc(p.name) + '"></button>';
-      }).join('') + '<span class="cc-paint-name" data-cc-paint>' + esc(c.paints[0].name) + '</span></div>' +
-      '      <button type="button" class="cc-add" data-cc-add>Reserve <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></button>' +
+      }).join('') + (more > 0 ? '<a class="cc-more" href="' + esc(url(c)) + '" aria-label="' + more + ' more colours">+' + more + '</a>' : '') : '') +
+      '<span class="cc-paint-name" data-cc-paint>' + esc(c.paints.length > 1 && more <= 0 ? c.paints[0].name : (c.paints.length > 1 ? '' : c.paints[0].name === 'Standard' ? '' : c.paints[0].name)) + '</span></div>' +
+      '      <button type="button" class="cc-add" data-cc-add>' + LABEL + ' <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></button>' +
       '    </div>' +
       '  </div>' +
       '</article>';
@@ -60,12 +65,12 @@
       var p = c.paints[k];
       var car = card.querySelector('.cc-car');
       var img = car.querySelector('img');
-      if (img) { var src = p.image || c.image; if (src) img.src = src; }
+      if (img) { var src = p.image || c.image; if (src && img.getAttribute('src') !== src) img.src = src; }
       else if (window.CarArt) window.CarArt.paint(car, p.hex);
       if (preview) return;
       card.__k = k;
       card.querySelector('[data-cc-price]').textContent = p.price;
-      card.querySelector('[data-cc-paint]').textContent = p.name;
+      if (!card.querySelector('.cc-more')) card.querySelector('[data-cc-paint]').textContent = p.name;
       [].forEach.call(card.querySelectorAll('.cc-paints [data-k]'), function (b) { b.setAttribute('aria-checked', +b.getAttribute('data-k') === k ? 'true' : 'false'); });
       var pr = card.querySelector('[data-cc-price]');
       pr.classList.remove('is-bump'); void pr.offsetWidth; pr.classList.add('is-bump');
@@ -84,11 +89,11 @@
         window.SiteCart.add({ id: p.id, quantity: 1, title: c.name, variant: p.name, price: p.price, image: p.image || c.image || (window.CarArt ? window.CarArt.dataUri(c.style, p.hex) : '') })
           .then(function () {
             add.classList.add('is-done');
-            add.firstChild.nodeValue = 'Reserved ';
+            add.firstChild.nodeValue = 'Added ';
             if (!window.SiteCart.isShopify) setTimeout(function () { window.SiteCart.open(); }, 350);
-            setTimeout(function () { add.classList.remove('is-done'); add.firstChild.nodeValue = 'Reserve '; }, 2600);
+            setTimeout(function () { add.classList.remove('is-done'); add.firstChild.nodeValue = LABEL + ' '; }, 2600);
           })
-          .catch(function (err) { alert((err && err.message) || 'Could not reserve.'); })
+          .catch(function (err) { alert((err && err.message) || 'Could not add to cart.'); })
           .then(function () { add.classList.remove('is-busy'); });
       }
     });

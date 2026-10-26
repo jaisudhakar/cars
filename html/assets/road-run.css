@@ -286,3 +286,75 @@
   .rr-stars, .rr-car.is-parked .car-body { animation: none; }
   .rr.rr-swap * { animation: none !important; }
 }
+
+/* ============================================================
+   Neon night track + product photo cards (data-rr-sky="night", photos in the data)
+   ============================================================ */
+.rr-glow {
+  /* coloured light behind the parked product, follows the chosen colour */
+  position: absolute; left: 60%; top: calc(var(--horizon) - 4%); z-index: 1; width: 70vmin; height: 46vmin;
+  transform: translate(-50%, -50%); border-radius: 50%; pointer-events: none;
+  background: radial-gradient(closest-side, color-mix(in srgb, var(--rr-paint, #ff4d1a) 55%, transparent), transparent);
+  filter: blur(30px); opacity: .55; transition: background .6s ease;
+}
+.rr-neon {
+  /* vertical light tubes like a studio backdrop; tinted by the chosen colour */
+  top: 8%; height: calc(var(--horizon) - 8%); z-index: 2;
+  background-image: linear-gradient(90deg, transparent 0 128px, color-mix(in srgb, var(--rr-paint, #3cffaa) 75%, #fff) 128px 131px, transparent 131px);
+  background-size: 260px 100%; background-repeat: repeat;
+  filter: drop-shadow(0 0 6px color-mix(in srgb, var(--rr-paint, #3cffaa) 80%, transparent)) drop-shadow(0 0 18px color-mix(in srgb, var(--rr-paint, #3cffaa) 50%, transparent));
+  -webkit-mask-image: linear-gradient(transparent, #000 25%, #000 75%, transparent);
+  mask-image: linear-gradient(transparent, #000 25%, #000 75%, transparent);
+  opacity: .55;
+}
+.rr-neon--far { top: 18%; height: calc(var(--horizon) - 22%); background-size: 180px 100%; background-image: linear-gradient(90deg, transparent 0 88px, rgba(255, 255, 255, .5) 88px 90px, transparent 90px); opacity: .18; filter: none; }
+.rr-wall {
+  /* back wall of the track with a soft horizontal light line */
+  position: absolute; left: 0; right: 0; top: calc(var(--horizon) - 18%); height: 18%; z-index: 3; pointer-events: none;
+  background: linear-gradient(rgba(255, 255, 255, 0), rgba(255, 255, 255, .04)), linear-gradient(90deg, transparent, rgba(255, 255, 255, .25) 20%, rgba(255, 255, 255, .25) 80%, transparent) center bottom / 100% 1px no-repeat;
+}
+.rr-kerb {
+  /* red/white racing kerb along the far edge of the track */
+  top: var(--horizon); height: 12px; z-index: 7; margin-top: -12px;
+  background-image: repeating-linear-gradient(90deg, #d5262c 0 40px, #f1f1f1 40px 80px);
+  background-size: 80px 100%;
+  box-shadow: 0 6px 18px rgba(0, 0, 0, .5);
+}
+.rr[data-rr-sky="night"] .rr-road { background: linear-gradient(#202228, #15171b 30%, #0e0f12); }
+.rr[data-rr-sky="night"] .rr-road::before { display: none; }
+.rr[data-rr-sky="night"] .rr-road::after {
+  /* neon reflections on the wet track */
+  inset: 0; opacity: 1;
+  background: radial-gradient(60% 40% at 60% 8%, color-mix(in srgb, var(--rr-paint, #ff4d1a) 22%, transparent), transparent 70%);
+}
+.rr[data-rr-sky="night"] .rr-scrim::before { opacity: 0; }
+.rr[data-rr-sky="night"] .rr-scrim::after { opacity: 1; }
+
+.rr-car--photo .rr-car-in { transform-origin: 50% 100%; will-change: transform; }
+.rr-car--photo img {
+  position: relative; z-index: 1; width: 100%; aspect-ratio: 1; object-fit: cover; border-radius: 22px;
+  box-shadow:
+    0 40px 70px -24px rgba(0, 0, 0, .85),
+    0 0 0 1px rgba(255, 255, 255, .12),
+    0 0 90px -14px color-mix(in srgb, var(--rr-paint, #ff4d1a) 60%, transparent);
+  -webkit-box-reflect: below 6px linear-gradient(transparent 74%, rgba(255, 255, 255, .2));
+  transition: box-shadow .6s ease;
+}
+.rr-trail {
+  /* light streaks behind a moving photo: starts at the card centre, points away from the direction of travel */
+  position: absolute; z-index: 0; top: 22%; bottom: 22%; left: 50%; width: 120%;
+  background: linear-gradient(90deg, rgba(255, 255, 255, .8), color-mix(in srgb, var(--rr-paint, #ff4d1a) 70%, #fff 10%) 15%, transparent);
+  -webkit-mask-image: repeating-linear-gradient(transparent 0 6px, #000 6px 12px);
+  mask-image: repeating-linear-gradient(transparent 0 6px, #000 6px 12px);
+  filter: blur(3px); opacity: var(--trail, 0);
+  transform-origin: 0 50%; transform: scaleX(calc(var(--dir, 1) * -1));
+}
+.rr-car--photo.is-parked .rr-car-in { animation: rrFloat 3.2s ease-in-out infinite; }
+@keyframes rrFloat { 50% { transform: translateY(-6px); } }
+
+/* many colours: compact dots */
+.rr-paints.is-dots { display: flex; flex-wrap: wrap; gap: 10px; }
+.rr-paints.is-dots .rr-paint { padding: 0; border: 0; background: none !important; border-radius: 50%; }
+.rr-paints.is-dots .rr-paint-txt { display: none; }
+.rr-paints.is-dots .rr-paint i { width: 30px; height: 30px; }
+@media (prefers-reduced-motion: reduce) { .rr-car--photo.is-parked .rr-car-in { animation: none; } }

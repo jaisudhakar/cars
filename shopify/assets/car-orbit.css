@@ -144,3 +144,18 @@
   .orbit-info.orbit-swap * { animation: none !important; }
   .orbit-info, .orbit-wheel, .orbit-paints-wrap { transition: none; opacity: 1; }
 }
+
+/* product photos on the wheel: rounded square cards */
+.orbit-car--photo img {
+  aspect-ratio: 1; object-fit: cover; border-radius: 18px;
+  box-shadow: 0 30px 50px -22px rgba(0, 0, 0, .55), 0 0 0 1px rgba(0, 0, 0, .06);
+}
+.orbit-car--photo.orbit-front img { box-shadow: 0 40px 70px -24px rgba(0, 0, 0, .6), 0 0 0 3px #fff, 0 0 0 4px var(--orbit-paint, var(--orbit-accent)); }
+.orbit-car--photo.orbit-front:hover img { transform: translateY(-6px) scale(1.02); }
+.orbit .orbit-paints { grid-template-columns: repeat(5, minmax(0, 1fr)); }
+@media (max-width: 749.98px) {
+  .orbit .orbit-paints { grid-template-columns: repeat(auto-fill, minmax(36px, 1fr)); gap: 6px; }
+  .orbit .orbit-paint { padding: 6px 0; }
+  .orbit .orbit-paint span { display: none; }
+  .orbit-wheel { bottom: 252px; }
+}

@@ -221,3 +221,39 @@
   .section-head .tabs { max-width: 100%; }
 }
 .bt-car img { display: block; width: 100%; height: auto; }
+
+/* ---------- product photo cards ---------- */
+.cc--photo .cc-media { aspect-ratio: 1; background: #0d0f12; }
+.cc--photo .cc-media::after { display: none; }
+.cc--photo .cc-car { inset: 0; left: 0; right: 0; bottom: 0; }
+.cc--photo .cc-car img { width: 100%; height: 100%; object-fit: cover; transition: transform 1s var(--ease-out), opacity .3s ease; }
+.cc--photo:hover .cc-car { transform: none; }
+.cc--photo:hover .cc-car img { transform: scale(1.06); }
+.cc--photo .cc-badge { z-index: 2; }
+.cc-chips { list-style: none; display: flex; flex-wrap: wrap; gap: 6px; margin: 12px 0 0; padding: 0 0 12px; border-bottom: 1px solid var(--line); }
+.cc-chips li { padding: 4px 10px; border-radius: 999px; background: var(--mist); font-size: 12px; font-weight: 600; color: var(--ink-2); }
+.cc-more { flex: 0 0 auto; display: grid; place-items: center; height: 22px; padding: 0 7px; border-radius: 999px; background: var(--mist); font-size: 11px; font-weight: 700; text-decoration: none; }
+
+/* ---------- category tiles with photos ---------- */
+.sx .bt--photo { color: #fff; }
+.bt-photo { position: absolute; inset: 0; z-index: -2; }
+.bt-photo img { width: 100%; height: 100%; object-fit: cover; transition: transform 1.2s var(--ease-out); }
+.bt--photo:hover .bt-photo img { transform: scale(1.08); }
+.bt--photo::after { content: ''; position: absolute; inset: 0; z-index: -1; background: linear-gradient(rgba(0, 0, 0, .35), transparent 30%, transparent 55%, rgba(0, 0, 0, .75)); pointer-events: none; }
+.bt--photo .bt-count { color: rgba(255, 255, 255, .75); }
+.bt--photo::before { z-index: -1; background: color-mix(in srgb, var(--accent) 85%, transparent); }
+.bt--photo .bt-arrow { color: var(--ink); }
+
+/* ---------- photo strip on the test-drive / CTA band ---------- */
+.td-strip { position: absolute; left: 0; bottom: 24px; display: flex; gap: 14px; width: max-content; animation: tdStrip 60s linear infinite; }
+.td-strip img { width: 120px; height: 120px; object-fit: cover; border-radius: 14px; opacity: .85; box-shadow: 0 10px 30px rgba(0, 0, 0, .5); }
+@keyframes tdStrip { to { transform: translateX(-50%); } }
+.td--strip { padding-bottom: 200px; }
+@media (prefers-reduced-motion: reduce) { .td-strip { animation: none; } }
+
+/* ---------- feature panel photos ---------- */
+.feat-img img { width: 100%; height: 100%; object-fit: cover; border-radius: 18px; filter: none; }
+.feat-img.is-photo { inset: 6%; }
+.feat-item-img img { width: 100%; height: 100%; object-fit: cover; border-radius: 18px; }
+.feat-item-img.is-photo { aspect-ratio: 1; overflow: hidden; }
+@media (max-width: 599.98px) { .bt-name { font-size: 19px; } .bt--photo .bt-arrow { width: 32px; height: 32px; } }

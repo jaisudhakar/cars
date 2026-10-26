@@ -33,6 +33,8 @@
 
   // sky colours: [top, bottom] for day, golden hour and night
   var SKY = [['#7fb8f0', '#e6f1fb'], ['#3d4f8f', '#ffb27a'], ['#04060c', '#16203a']];
+  // data-rr-sky="night": a neon night track the whole way (used with product photos)
+  var NIGHT = [['#05060b', '#141026'], ['#05060b', '#0b1f2a'], ['#06050a', '#24110f']];
   var SPEC_LABELS = { power: 'Power', accel: '0–100 km/h', range: 'Range', top: 'Top speed' };
 
   function create(sec) {
@@ -62,7 +64,7 @@
       sun: $('.rr-sun'), lane: $('[data-rr-lane]')
     };
     var layers = [].slice.call(sec.querySelectorAll('[data-rr-layer]')).map(function (el) {
-      return { el: el, k: parseFloat(el.getAttribute('data-rr-layer')) || 0.2, aspect: parseFloat(el.getAttribute('data-aspect')) || 4, tile: 0 };
+      return { el: el, k: parseFloat(el.getAttribute('data-rr-layer')) || 0.2, aspect: parseFloat(el.getAttribute('data-aspect')) || 4, px: parseFloat(el.getAttribute('data-tile')) || 0, tile: 0 };
     });
     if (ui.max) ui.max.textContent = pad2(N);
     sec.style.setProperty('--rr-n', (N - 0.1).toFixed(2));
@@ -73,9 +75,11 @@
       var el = document.createElement('div');
       el.className = 'rr-car';
       el.setAttribute('aria-hidden', 'true');
-      el.innerHTML = '<div class="rr-car-in"><span class="rr-beam"></span>' + art(c, 0) + '</div>';
+      var photo = !!(c.paints[0].image || c.image);
+      if (photo) el.className += ' rr-car--photo';
+      el.innerHTML = '<div class="rr-car-in">' + (photo ? '<span class="rr-trail"></span>' : '<span class="rr-beam"></span>') + art(c, 0) + '</div>';
       stage.appendChild(el);
-      return { el: el, inner: el.querySelector('.rr-car-in'), x: -9999, vis: false };
+      return { el: el, inner: el.querySelector('.rr-car-in'), photo: photo, x: -9999, vis: false };
     });
     function art(c, pi) {
       var p = c.paints[pi];
@@ -96,7 +100,8 @@
     }
 
     /* ---------- geometry ---------- */
-    var W = 0, H = 0, VH = 0, carW = 0, carH = 0, roadY = 0, cx = 0, mobile = false;
+    var W = 0, H = 0, VH = 0, carW = 0, carH = 0, cardW = 0, cardBase = 0, roadY = 0, cx = 0, mobile = false;
+    var nightSky = sec.getAttribute('data-rr-sky') === 'night';
     var P0 = -0.45, SPAN = N - 1 + 0.9;      // progress runs from car 0 arriving to the last car leaving
     function measure() {
       var r = sticky.getBoundingClientRect();
@@ -104,11 +109,14 @@
       mobile = W < 900;
       carW = mobile ? Math.min(W * 0.96, 560) : clamp(W * 0.5, 520, 900);
       carH = carW * 240 / 640;
-      roadY = H * (mobile ? 0.74 : 0.86);
+      roadY = H * (mobile ? 0.8 : 0.86);
       cx = mobile ? W * 0.5 : W * 0.6;
-      els.forEach(function (c) { c.el.style.width = carW.toFixed(1) + 'px'; });
+      // product photos ride along as square cards standing on the road
+      cardW = mobile ? Math.min(W * 0.62, H * 0.3) : clamp(Math.min(H * 0.44, W * 0.3), 240, 480);
+      cardBase = H * (mobile ? 0.8 : 0.79);
+      els.forEach(function (c) { c.el.style.width = (c.photo ? cardW : carW).toFixed(1) + 'px'; });
       layers.forEach(function (l) {
-        l.tile = l.el.offsetHeight * l.aspect;
+        l.tile = l.px || l.el.offsetHeight * l.aspect;
         l.el.style.width = (W + l.tile * 2) + 'px';
       });
     }
@@ -150,7 +158,8 @@
         var a = Math.abs(t);
         var g = a < 0.22 ? 0 : Math.pow((a - 0.22) / 0.78, 1.35) * (t < 0 ? -1 : 1);
         var x = cx + g * drive;
-        var vis = a < 1.05 && x > -carW && x < W + carW;
+        var w = c.photo ? cardW : carW;
+        var vis = a < 1.05 && x > -w && x < W + w;
         if (vis !== c.vis) { c.vis = vis; c.el.style.visibility = vis ? 'visible' : 'hidden'; }
         if (a < 0.5) activeNow = i;
         if (!vis) return;
@@ -158,18 +167,36 @@
         c.x = x;
         var tiltDeg = reduce ? 0 : clamp(-vx * 0.04, -1.6, 1.6);
         var bob = reduce || a < 0.22 ? 0 : Math.sin(x * 0.05) * 1.2;
-        c.el.style.transform = 'translate3d(' + (x - carW / 2).toFixed(1) + 'px,' + (roadY - carH * 214 / 240 + bob).toFixed(1) + 'px,0)';
-        c.inner.style.transform = 'rotate(' + tiltDeg.toFixed(2) + 'deg)';
+        var top = c.photo ? cardBase - cardW + bob : roadY - carH * 214 / 240 + bob;
+        c.el.style.transform = 'translate3d(' + (x - w / 2).toFixed(1) + 'px,' + top.toFixed(1) + 'px,0)';
+        if (c.photo) {
+          // photos lean into the motion and leave a light trail
+          var lean = reduce ? 0 : clamp(-vx * 0.06, -4, 4);
+          c.inner.style.transform = 'perspective(1400px) rotateY(' + (lean * 2).toFixed(2) + 'deg) skewX(' + (lean * 0.6).toFixed(2) + 'deg)';
+          c.inner.style.setProperty('--trail', clamp(Math.abs(vx) / 30, 0, 1).toFixed(3));
+          c.inner.style.setProperty('--dir', vx > 0 ? '1' : '-1');
+        } else {
+          c.inner.style.transform = 'rotate(' + tiltDeg.toFixed(2) + 'deg)';
+          if (window.CarArt) window.CarArt.spin(c.el, (x / (carW * 34 / 640)) * 57.2958);
+        }
         c.el.classList.toggle('is-parked', a < 0.22);
-        if (window.CarArt) window.CarArt.spin(c.el, (x / (carW * 34 / 640)) * 57.2958);
       });
       if (activeNow !== active && activeNow > -1) { active = activeNow; show(active); }
       sec.classList.toggle('rr-has-car', activeNow > -1 && Math.abs(p - activeNow) < 0.34);
 
       // scenery
-      var night = smooth(0.42, 0.78, u), dusk = smooth(0.12, 0.5, u) * (1 - night);
-      var top = night > 0 ? mix(SKY[1][0], SKY[2][0], night) : mix(SKY[0][0], SKY[1][0], dusk);
-      var bot = night > 0 ? mix(SKY[1][1], SKY[2][1], night) : mix(SKY[0][1], SKY[1][1], dusk);
+      var night, dusk, top, bot;
+      if (nightSky) {
+        // the track's ambient light drifts from violet to teal to ember along the run
+        var h2 = u * 2, seg = Math.min(1, Math.floor(h2)), f = h2 - seg;
+        night = 1; dusk = 0;
+        top = mix(NIGHT[seg][0], NIGHT[seg + 1][0], f);
+        bot = mix(NIGHT[seg][1], NIGHT[seg + 1][1], f);
+      } else {
+        night = smooth(0.42, 0.78, u); dusk = smooth(0.12, 0.5, u) * (1 - night);
+        top = night > 0 ? mix(SKY[1][0], SKY[2][0], night) : mix(SKY[0][0], SKY[1][0], dusk);
+        bot = night > 0 ? mix(SKY[1][1], SKY[2][1], night) : mix(SKY[0][1], SKY[1][1], dusk);
+      }
       sticky.style.setProperty('--sky-top', top);
       sticky.style.setProperty('--sky-bot', bot);
       sticky.style.setProperty('--night', night.toFixed(3));
@@ -232,9 +259,12 @@
       if (ui.msg) { ui.msg.textContent = ''; ui.msg.className = 'rr-msg'; }
       if (ui.specs) {
         var s = c.specs || {};
-        ui.specs.innerHTML = Object.keys(SPEC_LABELS).filter(function (k) { return s[k]; }).map(function (k) {
-          return '<div><dt>' + SPEC_LABELS[k] + '</dt><dd>' + esc(s[k]) + '</dd></div>';
-        }).join('');
+        var rows = Object.keys(SPEC_LABELS).filter(function (k) { return s[k]; }).map(function (k) { return [SPEC_LABELS[k], s[k]]; });
+        // no specs (e.g. RC products): show colour count and the first highlights instead
+        if (!rows.length) {
+          rows = [['Colours', c.paints.length > 1 ? c.paints.length + ' options' : 'One finish']].concat((c.details || []).slice(0, 3).map(function (d) { return ['Highlight', d]; }));
+        }
+        ui.specs.innerHTML = rows.map(function (r) { return '<div><dt>' + esc(r[0]) + '</dt><dd>' + esc(r[1]) + '</dd></div>'; }).join('');
       }
       renderPaints(i);
       setPaint(i, chosen[i], true);
@@ -252,21 +282,36 @@
       if (!ui.paints) return;
       var c = cars[i];
       var min = Math.min.apply(null, c.paints.map(amountOf));
+      var priced = c.paints.some(function (pt) { return amountOf(pt) !== min; });
+      // many colours or no price differences: compact colour dots; a single finish: no picker
+      ui.paints.classList.toggle('is-dots', c.paints.length > 4 || !priced);
+      ui.paints.hidden = c.paints.length < 2;
       ui.paints.innerHTML = c.paints.map(function (pt, k) {
         var extra = amountOf(pt) - min;
         return '<button type="button" class="rr-paint' + (pt.av === false ? ' is-na' : '') + '" role="radio" aria-checked="false" data-k="' + k + '" style="--c:' + esc(pt.hex) + '" title="' + esc(pt.name) + '">' +
           '<i aria-hidden="true"></i><span class="rr-paint-txt"><span>' + esc(pt.name) + '</span><b>' + (extra > 0 ? '+' + money(extra, cur) : 'Included') + '</b></span></button>';
       }).join('');
     }
+    /* show car i in paint k: swap the photo (with a quick fade) or repaint the drawing */
+    function look(i, k) {
+      var c = cars[i], pt = c.paints[k], car = els[i];
+      var src = pt.image || c.image;
+      if (src) {
+        var img = car.inner.querySelector('img');
+        if (!img || img.getAttribute('src') === src) return;
+        var next = new Image();
+        next.onload = function () {
+          img.src = src;
+          if (!reduce && img.animate) img.animate([{ opacity: 0.35, transform: 'scale(.97)' }, { opacity: 1, transform: 'none' }], { duration: 320, easing: 'cubic-bezier(.22,1,.36,1)' });
+        };
+        next.src = src;
+      } else if (window.CarArt) window.CarArt.paint(car.el, pt.hex);
+    }
     function setPaint(i, k, instant) {
       var c = cars[i], pt = c.paints[k];
       chosen[i] = k;
       var car = els[i];
-      if (pt.image || c.image) {
-        var img = car.inner.querySelector('img');
-        var src = pt.image || c.image;
-        if (img && img.getAttribute('src') !== src) img.src = src;
-      } else if (window.CarArt) window.CarArt.paint(car.el, pt.hex);
+      look(i, k);
       if (!instant && !reduce) {
         car.inner.classList.remove('is-shine');
         void car.inner.offsetWidth;
@@ -306,13 +351,10 @@
       ui.paints.addEventListener('pointerover', function (e) {
         var b = e.target.closest('.rr-paint');
         if (!b || active < 0 || e.pointerType !== 'mouse') return;
-        var c = cars[active], pt = c.paints[+b.getAttribute('data-k')];
-        if (!pt.image && !c.image && window.CarArt) window.CarArt.paint(els[active].el, pt.hex);
+        look(active, +b.getAttribute('data-k'));
       });
       ui.paints.addEventListener('pointerleave', function () {
-        if (active < 0) return;
-        var c = cars[active], pt = c.paints[chosen[active]];
-        if (!pt.image && !c.image && window.CarArt) window.CarArt.paint(els[active].el, pt.hex);
+        if (active > -1) look(active, chosen[active]);
       });
       ui.paints.addEventListener('keydown', function (e) {
         if (active < 0) return;
@@ -334,7 +376,7 @@
         image: pt.image || c.image || (window.CarArt ? window.CarArt.dataUri(c.style, pt.hex) : '')
       }).then(function () {
         ui.msg.className = 'rr-msg is-ok';
-        ui.msg.innerHTML = '<i aria-hidden="true"></i>' + esc(c.name) + ' in ' + esc(pt.name) + ' reserved. ';
+        ui.msg.innerHTML = '<i aria-hidden="true"></i>' + esc(c.name) + ' in ' + esc(pt.name) + ' added to your cart. ';
         var a = document.createElement('a');
         a.href = window.SiteCart.cartUrl;
         a.textContent = 'View ' + ((window.BRAND && window.BRAND.cartLabel) || 'cart').toLowerCase();
@@ -342,7 +384,7 @@
         ui.msg.appendChild(a);
       }).catch(function (err) {
         ui.msg.className = 'rr-msg is-err';
-        ui.msg.textContent = (err && err.message) || 'Could not reserve. Please try again.';
+        ui.msg.textContent = (err && err.message) || 'Could not add to cart. Please try again.';
       }).then(function () { ui.reserve.classList.remove('is-busy'); });
     });
 

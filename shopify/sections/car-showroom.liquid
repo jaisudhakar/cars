@@ -82,8 +82,8 @@
     { "type": "text", "id": "label", "label": "Section name (screen readers)", "default": "Showroom — drag the wheel to choose a car" },
     { "type": "text", "id": "details_label", "label": "Details link", "default": "View details" },
     { "type": "text", "id": "wheel_label", "label": "Wheel label", "default": "Drag the wheel" },
-    { "type": "text", "id": "paint_label", "label": "Paint label", "default": "Paint" },
-    { "type": "text", "id": "reserve_label", "label": "Reserve button", "default": "Reserve" },
+    { "type": "text", "id": "paint_label", "label": "Colour label", "default": "Colour" },
+    { "type": "text", "id": "reserve_label", "label": "Reserve button", "default": "Add to cart" },
     { "type": "color", "id": "accent", "label": "Accent (wheel dot, added tick)", "default": "#ff4d1a" },
     { "type": "range", "id": "height", "label": "Section height", "min": 60, "max": 100, "step": 2, "unit": "vh", "default": 100 },
     { "type": "range", "id": "min_height", "label": "Min height", "min": 560, "max": 1000, "step": 20, "unit": "px", "default": 760 }
@@ -93,21 +93,21 @@
       "type": "car",
       "name": "Car",
       "settings": [
-        { "type": "product", "id": "product", "label": "Product", "info": "Paints come from the option named Color, Colour or Paint. Each paint's price is that variant's price." },
+        { "type": "product", "id": "product", "label": "Product", "info": "Colours come from the option named Color, Colour or Paint; each colour uses its variant image and price." },
         {
-          "type": "select", "id": "style", "label": "Body (built-in drawing)", "default": "sedan",
+          "type": "select", "id": "style", "label": "Drawing if the product has no photo", "default": "sedan",
           "options": [
             { "value": "sedan", "label": "Sedan" }, { "value": "ev", "label": "Electric sedan" }, { "value": "coupe", "label": "Sports coupe" },
             { "value": "suv", "label": "SUV" }, { "value": "hatch", "label": "Hatchback / wagon" }, { "value": "pickup", "label": "Pickup truck" }
           ]
         },
-        { "type": "image_picker", "id": "image", "label": "Photo instead of the drawing", "info": "Transparent PNG/WebP, side view, facing right. Variant images are used per paint if set." },
-        { "type": "text", "id": "tagline", "label": "Tagline", "default": "Built to move." },
-        { "type": "textarea", "id": "paints", "label": "Paint colours", "info": "One per line: Name: #hex — e.g. Rosso Red: #c3161f. Not needed if the Color option has swatches." },
-        { "type": "text", "id": "power", "label": "Power", "default": "300 hp" },
-        { "type": "text", "id": "accel", "label": "0–100 km/h", "default": "5.0 s" },
-        { "type": "text", "id": "range", "label": "Range", "default": "600 km" },
-        { "type": "text", "id": "top", "label": "Top speed", "default": "240 km/h" }
+        { "type": "image_picker", "id": "image", "label": "Photo (optional)", "info": "Defaults to the product's featured image; each colour uses its variant image." },
+        { "type": "text", "id": "tagline", "label": "Tagline", "default": "" },
+        { "type": "textarea", "id": "paints", "label": "Swatch colours", "info": "One per line: Name: #hex — e.g. Burnout Red: #b3121c. Not needed if the Color option has swatches." },
+        { "type": "text", "id": "power", "label": "Power", "default": "" },
+        { "type": "text", "id": "accel", "label": "0–100 km/h", "default": "" },
+        { "type": "text", "id": "range", "label": "Range", "default": "" },
+        { "type": "text", "id": "top", "label": "Top speed", "default": "" }
       ]
     }
   ],

@@ -43,9 +43,10 @@
     var sort = params().get('sort') || 'featured';
     var fuel = 'all';
     var prices = CARS.map(function (c) { return c.base; });
-    var top = Math.ceil(Math.max.apply(null, prices.concat([0])) / 5000) * 5000;
+    var STEP = 500;
+    var top = Math.ceil(Math.max.apply(null, prices.concat([0])) / STEP) * STEP;
     var maxPrice = top;
-    if (maxEl) { maxEl.max = top; maxEl.min = Math.floor(Math.min.apply(null, prices) / 5000) * 5000; maxEl.value = top; }
+    if (maxEl) { maxEl.step = STEP; maxEl.max = top; maxEl.min = Math.floor(Math.min.apply(null, prices) / STEP) * STEP; maxEl.value = top; }
 
     tabsWrap.innerHTML = '<span class="tab-ink" aria-hidden="true"></span>' + (window.CATEGORIES || []).map(function (c) {
       var n = c.id === 'all' ? CARS.length : CARS.filter(function (p) { return p.category === c.id; }).length;
@@ -62,13 +63,12 @@
         if (cat !== 'all' && p.category !== cat) return false;
         if (fuel !== 'all' && p.fuel !== fuel) return false;
         if (p.base > maxPrice) return false;
-        if (q && (p.name + ' ' + p.categoryLabel + ' ' + p.description + ' ' + p.fuel).toLowerCase().indexOf(q.toLowerCase()) < 0) return false;
+        if (q && (p.name + ' ' + p.categoryLabel + ' ' + p.description + ' ' + (p.fuel || '') + ' ' + p.paints.map(function (x) { return x.name; }).join(' ')).toLowerCase().indexOf(q.toLowerCase()) < 0) return false;
         return true;
       });
       if (sort === 'price-asc') out.sort(function (a, b) { return a.base - b.base; });
       if (sort === 'price-desc') out.sort(function (a, b) { return b.base - a.base; });
-      if (sort === 'power') out.sort(function (a, b) { return parseFloat(b.specs.power) - parseFloat(a.specs.power); });
-      if (sort === 'accel') out.sort(function (a, b) { return parseFloat(a.specs.accel) - parseFloat(b.specs.accel); });
+      if (sort === 'colours') out.sort(function (a, b) { return b.paints.length - a.paints.length; });
       if (sort === 'name') out.sort(function (a, b) { return a.name.localeCompare(b.name); });
       return out;
     }
@@ -90,7 +90,7 @@
       queryEl.hidden = !q;
       if (q) queryEl.querySelector('span').textContent = 'Results for “' + q + '”';
       var catInfo = (window.CATEGORIES || []).filter(function (c) { return c.id === cat; })[0] || {};
-      var heading = q ? 'Search results' : (cat === 'all' ? 'All inventory' : catInfo.label + ' cars');
+      var heading = q ? 'Search results' : (cat === 'all' ? 'All RC cars' : catInfo.label);
       if (title.getAttribute('data-current') !== heading) {
         title.setAttribute('data-current', heading);
         var words = heading.split(' ');

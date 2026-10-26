@@ -1,10 +1,10 @@
 <!DOCTYPE html>
-<html lang="en" data-currency="USD">
+<html lang="en" data-currency="INR">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Configure your car — Veloce</title>
-  <meta name="description" content="Pick a paint, see the price and monthly payment, reserve or book a test drive.">
+  <title>RC car — L.O.T Cars</title>
+  <meta name="description" content="Pick a colour, see it in the photo and add it to your cart.">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Archivo:ital,wdth,wght@0,62..125,400..900;1,62..125,400..900&family=Inter:wght@400;500;600;700;800&family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet">
@@ -23,7 +23,7 @@
 
   <main id="main" class="cfg" data-cfg>
     <div class="container">
-      <ol class="crumbs" data-reveal><li><a href="index.html">Home</a></li><li><a href="inventory.html">Inventory</a></li><li aria-current="page" data-cfg-crumb></li></ol>
+      <ol class="crumbs" data-reveal><li><a href="index.html">Home</a></li><li><a href="inventory.html">Shop</a></li><li aria-current="page" data-cfg-crumb></li></ol>
 
       <div class="cfg-stage">
         <span class="cfg-ghost" data-cfg-ghost aria-hidden="true"></span>
@@ -40,28 +40,25 @@
           <h1 class="cfg-name" data-cfg-name></h1>
           <p class="cfg-tag" data-cfg-tag></p>
           <p class="cfg-desc" data-cfg-desc></p>
-          <dl class="cfg-specs" data-cfg-specs data-reveal-stagger="0.05"></dl>
-          <h2 class="h3" style="margin-top:clamp(40px,5vw,64px)">Highlights</h2>
+          <h2 class="h3" style="margin-top:clamp(32px,4vw,48px)">Highlights</h2>
           <ul class="cfg-details" data-cfg-details></ul>
         </div>
         <aside class="cfg-panel" data-reveal="up">
           <div class="cfg-price-row">
-            <div><small>Price in this paint</small><span class="cfg-price" data-cfg-price></span></div>
-            <div class="cfg-month">or from<b data-cfg-month></b>/month*</div>
+            <div><small>Price</small><span class="cfg-price" data-cfg-price></span></div>
           </div>
-          <div class="cfg-opt-head"><span>Paint</span><span>Prices update as you pick</span></div>
-          <div class="cfg-paints" data-cfg-paints role="radiogroup" aria-label="Paint"></div>
+          <div class="cfg-opt-head"><span>Colour</span><span data-cfg-count></span></div>
+          <div class="cfg-paints" data-cfg-paints role="radiogroup" aria-label="Colour"></div>
           <div class="cfg-buy">
-            <button type="button" class="btn btn-dark" data-cfg-reserve>Reserve</button>
-            <a class="btn btn-line" href="contact.html#test-drive" data-cfg-test>Test drive</a>
+            <button type="button" class="btn btn-dark" data-cfg-reserve>Add to cart</button>
+            <a class="btn btn-line" href="contact.html" data-cfg-test>Ask a question</a>
           </div>
           <p class="cfg-msg" data-cfg-msg aria-live="polite"></p>
           <ul class="cfg-perks">
-            <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="m5 12 5 5 9-10"/></svg>Refundable $500 reservation deposit</li>
-            <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="m5 12 5 5 9-10"/></svg>Free home delivery within 100 km</li>
-            <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="m5 12 5 5 9-10"/></svg>8-year battery &amp; powertrain warranty</li>
+            <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="m5 12 5 5 9-10"/></svg>Remote included in the box</li>
+            <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="m5 12 5 5 9-10"/></svg>A real photo of every colour</li>
+            <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="m5 12 5 5 9-10"/></svg>Questions? We reply within a working day</li>
           </ul>
-          <p class="fin-note" style="margin-top:12px;font-size:12px;color:var(--muted)">*Example: 20% deposit, 48 months, 4.9% APR. <a href="index.html#finance">Try the calculator</a>.</p>
         </aside>
       </div>
     </div>
@@ -70,7 +67,7 @@
       <div class="container">
         <div class="section-head">
           <div><p class="eyebrow" data-reveal>Keep exploring</p><h2 class="h2" data-split style="margin-top:16px">You might <em>also like</em></h2></div>
-          <a class="link-arrow" href="inventory.html" data-reveal>All inventory <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a>
+          <a class="link-arrow" href="inventory.html" data-reveal>Shop all <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a>
         </div>
         <div class="cc-grid" data-cfg-related></div>
       </div>
@@ -78,7 +75,7 @@
 
     <div class="cfg-sticky" data-cfg-sticky>
       <div><strong data-sticky-name></strong><span data-sticky-paint></span> · <span data-sticky-price></span></div>
-      <button type="button" class="btn btn-dark" data-sticky-reserve>Reserve</button>
+      <button type="button" class="btn btn-dark" data-sticky-reserve>Add to cart</button>
     </div>
   </main>
 

@@ -122,3 +122,40 @@
 @media (prefers-reduced-motion: reduce) {
   .ch-floor::before, .ch-streaks i, .ch-parked .ch-car .car-body { animation: none; }
 }
+
+/* photo mode: the product photo drives in as a card */
+.ch-car.ch-car--photo {
+  right: 7vw; bottom: 14%; width: min(40vw, 540px);
+  transform-origin: 50% 100%;
+}
+.ch-car--photo img {
+  position: relative; z-index: 1; width: 100%; aspect-ratio: 1; object-fit: cover; border-radius: 26px;
+  transform: perspective(1200px) rotateY(calc(var(--lean, 0deg) * 1.6)) skewX(var(--lean, 0deg));
+  box-shadow: 0 50px 90px -30px rgba(0, 0, 0, .9), 0 0 0 1px rgba(255, 255, 255, .12),
+    0 0 120px -20px color-mix(in srgb, var(--hero-paint, #1f55d6) 65%, transparent);
+  -webkit-box-reflect: below 8px linear-gradient(transparent 78%, rgba(255, 255, 255, .16));
+  transition: box-shadow .6s ease;
+}
+.ch-trail {
+  position: absolute; top: 24%; bottom: 24%; left: 50%; width: 140%; z-index: 0;
+  background: linear-gradient(90deg, rgba(255, 255, 255, .8), color-mix(in srgb, var(--hero-paint, #1f55d6) 75%, #fff 10%) 15%, transparent);
+  -webkit-mask-image: repeating-linear-gradient(transparent 0 7px, #000 7px 14px);
+  mask-image: repeating-linear-gradient(transparent 0 7px, #000 7px 14px);
+  filter: blur(3px); opacity: var(--trail, 0); transform-origin: 0 50%; transform: scaleX(-1);
+}
+.ch-parked .ch-car--photo { animation: chFloat 3.4s ease-in-out infinite; }
+@keyframes chFloat { 50% { translate: 0 -8px; } }
+.ch-parked .ch-car--photo .car-body { animation: none; }
+@media (max-width: 899.98px) {
+  .ch-car.ch-car--photo { right: 50%; margin-right: -36vw; width: 72vw; bottom: 30%; }
+}
+@media (prefers-reduced-motion: reduce) { .ch-parked .ch-car--photo { animation: none; } }
+@media (max-width: 899.98px) {
+  /* phones: copy, then the photo, then the colour dots — stacked instead of overlapping */
+  .ch:has(.ch-car--photo) { display: flex; flex-direction: column; min-height: 0; }
+  .ch:has(.ch-car--photo) .ch-road { position: relative; height: calc(min(72vw, 360px) + 70px); flex: 0 0 auto; }
+  .ch:has(.ch-car--photo) .ch-floor { height: 32%; }
+  .ch-car.ch-car--photo { left: 50%; right: auto; margin: 0 0 0 calc(min(72vw, 360px) / -2); width: min(72vw, 360px); bottom: 26px; }
+  .ch:has(.ch-car--photo) .ch-bar { position: relative; padding-top: 6px; }
+  .ch-paints { flex-wrap: wrap; }
+}

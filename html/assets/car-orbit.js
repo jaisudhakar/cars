@@ -55,6 +55,7 @@
       el.setAttribute('aria-label', p.name);
       var pt = p.paints[0];
       var img = pt.image || p.image;
+      if (img) el.className += ' orbit-car--photo';
       el.innerHTML = '<span class="orbit-float">' + (img
         ? '<img src="' + esc(img) + '" alt="" draggable="false" decoding="async">'
         : (window.CarArt ? window.CarArt.svg(p.style, pt.hex) : '')) + '</span>';
@@ -69,6 +70,9 @@
 
     /* ---------- geometry ---------- */
     var W = 0, H = 0, C = { x: 0, y: 0 }, R = 0, A0 = 0, STEP = 0.36, BASE = 300;
+    // product photos are square cards: smaller, and anchored by their middle instead of their wheels
+    var photos = items.some(function (p) { return p.paints[0].image || p.image; });
+    var LIFT = photos ? 0.55 : 0.3;
     function measure() {
       var r = stage.getBoundingClientRect();
       W = r.width; H = r.height;
@@ -78,7 +82,7 @@
         C.x = W / 2; C.y = H * 0.46 + R;
         A0 = -Math.PI / 2;
         STEP = 0.3;
-        BASE = clamp(W * 0.82, 260, 420);
+        BASE = photos ? clamp(W * 0.6, 200, 300) : clamp(W * 0.82, 260, 420);
       } else {
         // active car sits up-left of a big circle whose centre is off to the bottom right
         var ax = W * 0.5, ay = H * 0.44;
@@ -86,7 +90,7 @@
         R = Math.hypot(ax - C.x, ay - C.y);
         A0 = Math.atan2(ay - C.y, ax - C.x);
         STEP = 0.36;
-        BASE = clamp(W * 0.34, 300, 560);
+        BASE = photos ? clamp(Math.min(W * 0.26, H * 0.46), 240, 420) : clamp(W * 0.34, 300, 560);
       }
       if (ring) {
         ring.style.width = ring.style.height = (R * 2) + 'px';
@@ -117,7 +121,7 @@
         var w = BASE * sc;
         var bob = reduceMotion ? 0 : Math.sin(t * 1.3 + i * 1.3) * 5 * sc;
         s.el.style.width = w.toFixed(1) + 'px';
-        s.el.style.transform = 'translate3d(' + (x - w / 2).toFixed(1) + 'px,' + (y - w * 0.3).toFixed(1) + 'px,0) rotate(' + (-d * 5).toFixed(2) + 'deg)';
+        s.el.style.transform = 'translate3d(' + (x - w / 2).toFixed(1) + 'px,' + (y - w * LIFT).toFixed(1) + 'px,0) rotate(' + (-d * 5).toFixed(2) + 'deg)';
         s.fl.style.transform = 'translateY(' + bob.toFixed(2) + 'px)';
         s.el.style.opacity = op.toFixed(3);
         s.el.style.zIndex = 100 - Math.round(ad * 10);
@@ -182,7 +186,17 @@
       chosen[i] = k;
       var car = cars[i];
       var img = car.el.querySelector('img');
-      if (img) { var src = pt.image || p.image; if (src && img.getAttribute('src') !== src) img.src = src; }
+      if (img) {
+        var src = pt.image || p.image;
+        if (src && img.getAttribute('src') !== src) {
+          var pre = new Image();
+          pre.onload = function () {
+            img.src = src;
+            if (img.animate && !reduceMotion) img.animate([{ opacity: 0.3 }, { opacity: 1 }], { duration: 300 });
+          };
+          pre.src = src;
+        }
+      }
       else if (window.CarArt) window.CarArt.paint(car.el, pt.hex);
       if (ui.price) {
         ui.price.textContent = pt.price;
@@ -226,7 +240,7 @@
           ok.className = 'orbit-check';
           ok.setAttribute('aria-hidden', 'true');
           ui.msg.appendChild(ok);
-          ui.msg.appendChild(document.createTextNode(p.name + ' in ' + pt.name + ' reserved '));
+          ui.msg.appendChild(document.createTextNode(p.name + ' in ' + pt.name + ' added to your cart '));
           var a = document.createElement('a');
           a.href = window.SiteCart.cartUrl;
           a.textContent = 'View ' + ((window.BRAND && window.BRAND.cartLabel) || 'cart').toLowerCase();
@@ -236,7 +250,7 @@
         })
         .catch(function (err) {
           ui.msg.className = 'orbit-msg orbit-msg-err';
-          ui.msg.textContent = (err && err.message) || 'Could not reserve. Please try again.';
+          ui.msg.textContent = (err && err.message) || 'Could not add to cart. Please try again.';
         })
         .then(function () { busy = false; ui.reserve.classList.remove('orbit-busy'); });
     });

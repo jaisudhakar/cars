@@ -1,10 +1,10 @@
 <!DOCTYPE html>
-<html lang="en" data-currency="USD">
+<html lang="en" data-currency="INR">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>All inventory — Veloce</title>
-  <meta name="description" content="Electric, SUV, sedan, performance and truck models — filter by body type, fuel and price.">
+  <title>Shop all RC cars — L.O.T Cars</title>
+  <meta name="description" content="Drift cars, off-road 4x4s, mini racers, construction and trucks — filter by category and price.">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Archivo:ital,wdth,wght@0,62..125,400..900;1,62..125,400..900&family=Inter:wght@400;500;600;700;800&family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet">
@@ -25,20 +25,18 @@
 
     <section class="page-hero">
       <div class="container">
-        <ol class="crumbs" data-reveal><li><a href="index.html">Home</a></li><li aria-current="page">Inventory</li></ol>
+        <ol class="crumbs" data-reveal><li><a href="index.html">Home</a></li><li aria-current="page">Shop</li></ol>
         <h1 class="h1" data-shop-title data-reveal>All <em>inventory</em></h1>
-        <p class="lead" data-reveal style="--rd:.1s">Every model in the showroom. Hover a paint dot to repaint the car — the price follows.</p>
+        <p class="lead" data-reveal style="--rd:.1s">Every RC car we stock. Hover a colour dot to see that colour.</p>
       </div>
     </section>
 
     <div class="shop-bar" data-shop-bar>
       <div class="container shop-bar-in">
-        <div class="tabs" role="group" aria-label="Body type" data-shop-tabs></div>
+        <div class="tabs" role="group" aria-label="Category" data-shop-tabs></div>
         <div class="shop-tools">
           <div class="shop-filters">
-            <label class="price-filter"><span data-shop-max-out>Any price</span><input type="range" step="5000" data-shop-max aria-label="Maximum price"></label>
-            <label class="visually-hidden" for="shop-fuel">Fuel</label>
-            <div class="select-mini"><select id="shop-fuel" data-shop-fuel></select></div>
+            <label class="price-filter"><span data-shop-max-out>Any price</span><input type="range" data-shop-max aria-label="Maximum price"></label>
           </div>
           <label class="visually-hidden" for="shop-sort">Sort by</label>
           <div class="select-mini">
@@ -46,8 +44,7 @@
               <option value="featured">Featured</option>
               <option value="price-asc">Price: low to high</option>
               <option value="price-desc">Price: high to low</option>
-              <option value="power">Most powerful</option>
-              <option value="accel">Quickest 0–100</option>
+              <option value="colours">Most colours</option>
               <option value="name">Name A–Z</option>
             </select>
           </div>
@@ -65,7 +62,7 @@
       <div class="cc-grid" data-shop-grid></div>
       <div class="shop-empty" data-shop-empty hidden>
         <h2>No cars match</h2>
-        <p>Try another body type, raise the price limit or clear the search.</p>
+        <p>Try another category, raise the price limit or clear the search.</p>
         <button type="button" class="btn btn-dark" data-shop-reset>Show everything</button>
       </div>
     </section>

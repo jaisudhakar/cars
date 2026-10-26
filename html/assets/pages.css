@@ -264,3 +264,20 @@ a.info-card:hover { background: var(--ink); color: #fff; transform: translateX(6
 .nf-sign { display: inline-block; margin-bottom: 18px; padding: 8px 16px; border: 2px solid var(--ink); border-radius: 8px; font-size: 13px; font-weight: 800; letter-spacing: .14em; text-transform: uppercase; transform: rotate(-3deg); }
 .nf p { margin: 18px auto 30px; max-width: 420px; color: var(--muted); font-size: 18px; }
 @media (max-width: 899.98px) { body:has(.cfg-sticky.is-on) .to-top { bottom: 90px; } }
+
+/* product photo on the product page stage */
+.cfg-car.cfg-car--photo {
+  --s: calc(clamp(340px, 52vw, 640px) * .86);
+  left: 50%; bottom: 7%; width: var(--s); margin-left: calc(var(--s) / -2);
+}
+.cfg-car--photo img { aspect-ratio: 1; object-fit: cover; border-radius: 22px; box-shadow: 0 40px 80px -30px rgba(0, 0, 0, .55); }
+.cfg-car--photo.is-shine img { animation: none; }
+.cfg-stage:has(.cfg-car--photo)::after { display: none; }
+.cfg-stage:has(.cfg-car--photo) .cfg-ghost { top: 50%; transform: translateY(-50%); }
+@media (max-width: 899.98px) { .cfg-car.cfg-car--photo { --s: calc(clamp(340px, 52vw, 640px) * .82); width: var(--s); margin-left: calc(var(--s) / -2); } }
+
+/* photo versions of the about band and 404 */
+.about-band--photo figure { background: #0d0f12; }
+.about-band--photo img { width: 100%; height: 100%; object-fit: cover; filter: none; }
+.nf-car--photo { width: min(260px, 60vw); animation: nfLost 4s ease-in-out infinite; }
+.nf-car--photo img { width: 100%; aspect-ratio: 1; object-fit: cover; border-radius: 22px; box-shadow: 0 30px 60px -20px rgba(0, 0, 0, .5); }

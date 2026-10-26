@@ -41,7 +41,7 @@
   "categoryLabel": {{ product.type | json }},
   "badge": {{ badge | default: '' | json }},
   "description": {{ product.description | strip_html | truncatewords: 40 | json }},
-  "image": {% if image != blank %}{{ image | image_url: width: 1600 | json }}{% else %}null{% endif %},
+  "image": {% if image != blank %}{{ image | image_url: width: 1600 | json }}{% elsif product.featured_image %}{{ product.featured_image | image_url: width: 1200 | json }}{% else %}null{% endif %},
   "specs": { "power": {{ c_power | default: '' | json }}, "accel": {{ c_accel | default: '' | json }}, "range": {{ c_range | default: '' | json }}, "top": {{ c_top | default: '' | json }} },
   "paints": [
     {%- assign seen = '|' -%}
